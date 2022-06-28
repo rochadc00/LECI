@@ -1,0 +1,70 @@
+#if...else
+...
+if:	ble $t0,$t1,else #brench if less or equal --> para inteiro
+			 #brench if less or equal unsigned --> se fosse int_unsigned
+	move $t2,$t0 #$t2=$t0
+	j endif
+	
+else:	move $t2,$t1 #t2=t1
+
+endif:...
+
+
+#ciclo for()
+#Em C
+          1º    2º    4º
+for(n=1, n<=10, n++)
+	3º
+	soma = soma+n
+	
+#Em assembly:			
+	li $t0,0 #soma = 0
+	li $t1,1 #n=1    1º!!!
+for:	bgt $1,10,endfor #brench greater than   2º!!!
+	add $t0,$t0,$t1 #soma = soma+n 	3º!!!
+	addi $t1, $t1,1  #n++			4º!!!
+	j    for
+endfor:...
+
+#Ciclo while()
+
+#Em C
+
+int soma = 0;
+int n=1;
+while(n<=10)
+{
+   soma = soma + n;
+   n++;
+}
+
+#Em Assembly:
+ Como em C temos rigorasamente o mesmo que um ciclo for()
+ Em Assembly fica igual:
+ 	li $t0,0 #soma = 0
+	li $t1,1 #n=1    1º!!!
+while:	bgt $1,10,endw #brench greater than   2º!!!
+	add $t0,$t0,$t1 #soma = soma+n 	3º!!!
+	addi $t1, $t1,1  #n++			4º!!!
+	j    while
+endw:...
+
+#Ciclo do...while()
+#Em C
+int soma = 0;
+int n = 1;
+do{
+  soma = soma + n;
+  n++;
+}while(n<=10)
+
+#Em Assembly:
+
+	li   $t0,0	#soma=0;
+	li   $t1,1	#n=1;
+do:
+	add  $t0,$t0,$t1 #soma = soma + n
+	addi $t1,$t1,1 	#n++
+while:  ble  $t1,10,do	#brench less or equal
+   
+   

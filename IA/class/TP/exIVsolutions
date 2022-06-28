@@ -1,0 +1,82 @@
+a)
+Variáveis?
+A,B,C,D,E
+
+
+Domínios? 3
+azul,verde e vermelho
+# D = {azul,verde e vermelho}
+#todas as variáveis têm D como domínio
+
+Restrições?
+r(v1,x1,v2,x2)(restrições têm sp 4 argumentos) : x1 != x2
+
+
+Grafo de restrições?
+
+			D -----------
+		  /	  \			|
+	   /		\		|
+	 /		  	  \		|
+	 					|
+	A ----- B ----- C 	|
+	  \		|	 /		|
+	   \	|	/		|
+		\	|  /		|
+			E  ----------
+
+Em todas as arestas, existe a restrição R
+
+
+------------------------------------------------
+
+b)
+Variáveis?
+A,B,C,D,E,F
+
+
+Domínios? 4
+azul,verde, vermelho e amarelo
+# D = {azul,verde,vermelho,amarelo}
+#todas as variáveis têm D como domínio
+
+Restrições?
+r(r1,c1,r2,c2,r3,c3) (restrições têm sp 4 argumentos) : c1!=c2 and c2!=c3
+
+
+Grafo de restrições?
+
+			D -----------
+		  /	  \			|
+	   /		\		|
+	 /		  	  \		|
+	 					|
+	A ----- B ----- C 	|
+	  \		|	 /	|	|
+	   \	|	/	|	|
+		\	|  /	|	|
+			E  -----F----
+			|-----------|
+
+Em todas as arestas, existe a restrição R
+
+5.
+
+Variáveis: 3 amigos(André, Bernardo e Claudio)
+
+Domínio: 
+
+A in { (bB,cC)}
+B in { (bA,cC), (bC,cA)}
+C in { (bA,cB), (bB,cA)}
+
+restricoes(v1,x1,v2,x2): x1.chapeu != x2.chapeu && x1.bicl != x2.bicl
+restricoes(v1,x1,v2,x2): x1[0] != x2[0] && x1[1] != x2[1]
+
+grafo:
+
+	
+	    A
+	   / \
+	  /   \
+	 B --- C

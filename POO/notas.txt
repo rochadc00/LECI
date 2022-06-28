@@ -1,0 +1,280 @@
+JVM : vantagem (grande portabilidade) e desvantagem (menor desempenho)
+
+int a = 1;
+int b = ++a; // a=2 e b=2
+int c = b++; // b=3 e c=2
+
+float f = 0.12f (obrigatorio)
+
+nextLine() -> lê uma linha(String)
+next() -> lê uma palavra(String)
+
+Criação de arrays:
+	int[] v <=> int v[];
+	int[] v2 = {1,2,3} <=> int[] v3 = new int[] {1,2,3};
+
+array tem dimensão fixa
+
+int[][] a = {{1,2,3},{4,5,6]}};
+a.length = 2
+a[0].length = 3
+a[0][1] = 9;
+--------------------------------------------------
+operador ternário ?:
+	result  = testCondition ? valueIfTrue : valueIffalse
+	- avalia uma expressão (1º operando)
+	- se true, o resultado é igual ao 2º operando
+	- se false, o resultado é igual ao 3º operando
+
+Por norma utilizados ciclos (for, do while, while) quando o número de iterações
+é desconhecido e ciclos do tipo contador quando sabemos à partida o número de 
+iterações.
+
+terminamos a execução de uma bloco com break ou continue:
+	break - permite a saída imediata do bloco de código que está a ser executado (maior
+uso em switches mas pode ser usada em ciclos)
+	continue - permite terminar a execução da iteração corrente, forçando a passagem
+para a iteração seguinte (não termina o ciclo)
+-----------------------------------------------------
+Programação modular
+	- programas independentes
+	- fácil ded compartilhar e reutilizar
+
+	. Java é uma linguagem case-sensitive (exemplo!=Exemplo)
+	. Uma classe deve ser pública
+
+Funções/métodos estáticos: realiza uma tarefa; tem zero ou + argumentos de entrada; retorna zero ou um valor de saída;
+exemplo: Math.random(), Integer.parseInt(), System.out.print(), main()
+
+Métodos estáticos são métodos que podem ser chamados na main para execução.
+
+É possível converter um array de char em string:
+	exemplo. char ch[] = {'s','t','r','i','n','g'}; String s2 = new String(ch)
+ 
+Objetos do tipo string são imutáveis (constantes) => todos os métodos cujo objetivo é modificar
+uma string, na realidaded constroem e devolvem uma string nova.
+
+O tamanho de uma string determina-se pelo método length();
+O acesso a um caracter é feito com charAt(int index);
+
+Métodos de string: equals,equalsIgnoreCase,compareTo,contains,substring,startsWith,endsWith,...
+
+String s1 = "Aveiro";
+String s2 = "aveiro";
+System.out.println(s1.equals(s2) ? "Iguais" : " Diferentes");
+System.out.println
+(s1.equalsIgnoreCase(s2) ? "Iguais" : " Diferentes ");
+System.out.println(s1.compareTo(s2));
+// <0 (s1 menor), 0(iguais), >0 (s1 maior)
+System.out.println(s1.contains("ve")); // true
+System.out.println(s1.substring(1, 3)); // ve
+System.out.println(s1.startsWith("ave")); // false
+System.out.println(s1.endsWith("ro")); // true
+
+
+método format retorna uma string nova formatada.
+
+O método matches da classe String verifica se uma String inclui um dado padrão.
+String s1 = "123";
+System.out.println(s1.matches("\\d{2,4}")); => true
+// 2-4 dígitos seguidos
+s1 = "abcdefg";
+System.out.println(s1.matches("\\w{3,}")); => true
+// pelo menos 3 carateres alfanuméricos
+	
+
+método split separa uma string em partes com base numa expressão regular e devolve o vetor 
+de strings resultante:
+
+String frase = "Regular expressions are powerful and "
++ "flexible text-processing tools.";
+String[] splitResult = frase.split("\\W");
+// separa com base em carateres não alfanuméricos
+System.out.println(splitResult.length + " palavras: "+
+Arrays.toString(splitResult));
+splitResult = frase.split("ex");
+System.out.println(splitResult.length + " palavras: " +
+Arrays.toString(splitResult));
+26
+9 palavras: [Regular, expressions, are, powerful, and, flexible, text, processing, tools]
+4 palavras: [Regular , pressions are powerful and fl, ible t, t-processing tools.]
+	
+padrões regex:
+– . qualquer caracter
+– \d dígito de 0 a 9
+– \D não dígito [^0-9]
+– \s “espaço”: [ \t\n\x0B\f\r]
+– \S não “espaço”: [^\s]
+– \w carater alfanumérico: [a-zA-Z_0-9]
+– \W carater não alfanumérico: [^\w]
+– [abc] qualquer dos carateres a, b ou c
+– [^abc] qualquer carater exceto a, b e c
+– [a-z] qualquer carater entre a-z, inclusive
+– X? um ou nenhum X
+– X* nenhum ou vários X
+– X+ um ou vários X
+
+--------------------------------------------------
+Objetos são instancias de classes: Book oneBook = new Book();
+Objetos são manipuláveis através de referências: Pessoa nome1; nome1 = new Pessoa (Manuel);
+Objetos devem ser explicitamente criados: Circulo c1 = new Circulo(1,5); String s = "Livro";
+
+Objetos:
+	- armazenados na memória heap
+	- manipulaods através de uma referência(variável), guardada na pilha
+	- têm estado(atributos), comportamento(métodos), identidade(referência)
+
+A invocação de métodos é sempre efetuada através de notação de ponto: oneBook.setTitle("Turismo em Aveiro");
+Recetor sempre à esquerda e pode ser ou uma classe ou uma referência para um objeto.
+
+Package -> gestão de espaço de nomes para evitar conflitos de nomes de classes.
+As classes são referenciadas através dos seus nomes absolutos ou utilizando a primitiva import.
+
+import poo.*						poo.Book sr = new poo.Book();
+Book sr = new Book();		<=>		
+
+Construtor:	
+	- A instanciação é feita através do operador new.	Carro c1 = new Carro();
+	- pode ser criado de maneiras diferentes: Carro c2 = new Carro("Ferrari","430");
+	- é chamado apenas uma vez: na criação do objeto
+	- no caso de não ter parametros, designa-se por default construtor ou de omissão (é automaticamente criado).
+	- se houver pelo menos um construtor associado a uma dada classe, o compilador já nao cria o de omissão.
+
+Pode se usar o mesmo nome em funções diferentes, desde que com parametros distintos(caso do construtor).
+Não se distingue funções pelo valor de retorno.
+
+A referência this pode ser utilizada dentro de cada objeto para referenciar esse mesmo objeto e
+para retornar num dado método, a referencia para esse objeto:
+	public class Contador {
+		int i = 0;
+		Contador increment() {
+			i++; return this;
+		}
+
+Permite também invocar sobre o mesmo objeto um outro cosntrutor:	
+	public Book(String title, int pubYear) {
+		this.title = title;
+		this.pubYear = pubYear;
+	}
+	public Book(String title) {
+		this(title, 2000);
+	}
+Esta forma acima só pode ser usada dentro de construtores: this deve ser a 1º instrução a aparecer e não é possível
+invocar mais do um construtor this.
+
+Métodos estáticos:
+	- não têm referencia this
+	- não sáo invocados métodos não estáticos a partir de métodos estáticos
+	- pode se invocar métodos estáticos sem que existam objetos dessa classe
+	- não estão associados a objetos
+
+No caso de vetores, ex: Book[] xC = new Book[10]; // 10 refs! Não são 10 Books!!
+38
+
+Garbage collector é responsável por libertar uma referência e esse objeto deixa de poder ser usado
+
+-------------------------------------------
+Encapsulamento:
+
+	- Separação entre aquilo que não pode mudar (interface) e o que pode mudar (implementação)
+	- Controlo de visibilidade da interface (public,default,protected,private)
+
+Controla o nível de accesso e os principais são:
+	-> public: pode ser usado em qualquer classe
+	-> "omissão": visível dentro do mesmo package
+	-> protected: visível dentro do mesmo package e classes derivadas
+	-> private: apenas visível dentro da classe
+
+Encapsulamento permite esconder os dados internos de um objeto(mas por vezes é preciso aceder aos mesmos
+diretamente para leitura/escrita)
+- TODOS OS ATRIBUTOS SÃO PRIVADOS
+- O acesso à informação interna de um objeto(parte privada) deve ser efetuada sempre, através de funções da
+interface pública.
+
+Selector (método get) -> devolve o valor atual de um atributo
+Modificador (método set) -> modifica o estado do objeto
+
+---------------------------------------------------
+Herança:
+
+Relações entre classes identificam-se facilmente recorrendo a alguns modelos reais
+exemplo: RelogioDigital e RelogioAnalogico são ambos tipos de relógio (especialização ou herança) IS-A
+	   RelogioDigital, por seu lado, contem uma Pilha (composição) HAS-A
+
+IS-A indica herança, ou seja, um classe é um sub-tipo de outra classe
+	class Relogio { ... }
+	class RelogioDigital extens Relogio { ... }
+
+HAS-A indica que uma classe é composta por objetos de uma outra classe
+	class Pilha { ... }
+	class RelogioDigital extends Relogio { Pilha p; ... }
+
+Ao herdar métodos podemos:
+	- manter inalterados
+	- acrescentar funcionalidades
+	- redefinir
+
+- métodos public na CB => são public na CD
+- métodos protected na CB => são protected ou public na CD (não private)
+- métodos sem controlo de acesso na CB => não podem ser private na CD
+- métodos private na CB não podem ser herdados
+
+Em java, todas as classes derivam da super classe java.lang.Object
+------------------------------------------------
+Polimorfismo:
+
+Upcasting e downcasting
+double z = 2.75;
+int k = (int) z;	-> downcasting
+float x = k;	-> upcasting
+double w = 5;	-> upcasting
+Alvo fc1 = new Alvo(1.5, 10, 20, Color.red);
+Circulo c1;
+c1 = fc1;		-> OK, um alvo é um circulo
+Alvo fc2;	
+fc2 = c1;		-> ERRO, tem de haver downcasting
+fc2 = (Alvo) c1;	-> OK
+
+Em polimorfismo podemos criar objetos da seguinte forma:
+	Circulo c1 = new Alvo(...);, desde que Alvo seja um Circulo
+Porém, não se pode criar da seguinte maneira: Alvo a1 = new Circulo(...); pq um circulo não precisa de ser alvo
+
+Polimorfismo está diretamente associado ao mecanismo de ligação dinâmica(dynamic binding)
+- podemos desenvolver um método x() com parâmetros CBase com garantia que aceita qualquer argumento
+derivado de CB.
+- todos os métodos (à exceção dos final) sã late binding.
+
+Uma classe é ABSTRATA se contiver pelo menos um método abstrato e um método ABSTRATO é um método
+cujo corpo não é definido. Além disso, não sao instanciáveis. Forma f; OK	f = new Forma(); ERRO
+Num processo de herança, uma classe só deixa de ser abstrata quando implementa todos os métodos abstratos de uma classe
+abstrata.
+
+Numa interface, uma classe pode herdar de uma só classe base e implementar uma ou mais interfaces.
+Todos os seus métodos são, implicitamente, abstratos (únicos modificadores são public e abstract)
+Não são permitidos construtores.
+As variáveis são implicitamente estáticos e constantes.
+Uma classe (não abstrata) que implemente uma interface todos os seus métodos.
+Pode ser vazia (cloneable,serializable).
+Não se pode criar uma instância da interface mas pode criar-se uma referência.
+
+Classes default de interfaces podem ser reescritas em outras classes que as implemente e
+eventualmente serem chamadas na main, ao contrário das static.
+
+
+Classes Abstratas					Interfaces
+					
+v Objetivo: descrever				v Objetivo: descrever comportamentos
+entidades e propriedades			funcionais
+v Podem implementar				v Não podem implementar
+interfaces						classes
+v Permitem herança simples			v Permitem herança múltipla
+v Relacionamento na				v Implementação horizontal
+hierarquia simples de				na hierarquia
+classes
+
+
+
+
+
+
+

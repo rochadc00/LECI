@@ -1,0 +1,24 @@
+Dicas guião:
+%%%ex1
+%a)
+
+%b) nº medios, brinquedos defeituosos mas não pelos componentes, com n=8 na mesma.
+%
+%%ex2
+%b) valor teorico da pB para n = 8
+
+%c) 2 <= n <= 20 grafico do tipo plot
+%descrever os resultados, aumento/decrescimo
+
+%d)
+
+%%ex3
+%a) calcular a funcao massa probabilidade
+%b) relacionado com a) n=8
+%c) desvio padrão
+%d) n = 16, analisar
+
+%%%ex4
+% processo de montagem --> p=0,001
+% cada caixa no fim, pega até n brinquedos, testa e verifica
+% a caixa fica retida caso tenha defeito num brinquedo

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: .
+Created-By: 1.7.0_201 (Oracle Corporation)
+Main-Class: Mars
+

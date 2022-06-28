@@ -1,0 +1,1 @@
+%analisando pelo gráfico da alinea anterior é 6.

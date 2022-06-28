@@ -1,0 +1,203 @@
+	.file	"mem.c"
+	.intel_syntax noprefix
+	.globl	cntvar
+	.section	.rodata
+	.type	cntvar, @object
+	.size	cntvar, 9
+cntvar:
+	.string	"constant"
+	.local	bssvar
+	.comm	bssvar,4,1
+	.align 4
+.LC0:
+	.string	"foo [%03u]: &argc  = %08x -> stack = %08x\n"
+	.text
+	.globl	foo
+	.type	foo, @function
+foo:
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 1048600
+	lea	eax, [ebp+8]
+	mov	DWORD PTR [ebp-12], eax
+	mov	eax, DWORD PTR [ebp-12]
+	and	eax, DWORD PTR [ebp+12]
+	push	eax
+	push	DWORD PTR [ebp-12]
+	push	DWORD PTR [ebp+16]
+	push	OFFSET FLAT:.LC0
+	call	printf
+	add	esp, 16
+	mov	eax, DWORD PTR [ebp+16]
+	cmp	eax, DWORD PTR [ebp+20]
+	jnb	.L1
+	mov	eax, DWORD PTR [ebp+16]
+	lea	edx, [eax+1]
+	mov	eax, DWORD PTR [ebp+8]
+	push	DWORD PTR [ebp+20]
+	push	edx
+	push	DWORD PTR [ebp+12]
+	push	eax
+	call	foo
+	add	esp, 16
+.L1:
+	leave
+	ret
+	.size	foo, .-foo
+	.section	.rodata
+	.align 4
+.LC1:
+	.string	"Internal Variables (Page = %u)\n"
+	.align 4
+.LC2:
+	.string	"&argc  = %08x -> stack = %08x\n"
+	.align 4
+.LC3:
+	.string	"malloc = %08x -> heap  = %08x\n"
+	.align 4
+.LC4:
+	.string	"bssvar = %08x -> bss   = %08x\n"
+	.align 4
+.LC5:
+	.string	"cntvar = %08x -> const = %08x\n"
+	.align 4
+.LC6:
+	.string	"&main  = %08x -> text  = %08x\n"
+.LC7:
+	.string	"r"
+.LC8:
+	.string	"/proc/self/maps"
+.LC9:
+	.string	"\n\nContent of /proc/self/maps"
+.LC10:
+	.string	"%s"
+.LC11:
+	.string	"\nStack evolution:"
+	.text
+	.globl	main
+	.type	main, @function
+main:
+	lea	ecx, [esp+4]
+	and	esp, -16
+	push	DWORD PTR [ecx-4]
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	sub	esp, 1060
+	mov	eax, ecx
+	mov	DWORD PTR [ebp-12], eax
+	sub	esp, 12
+	push	4
+	call	malloc
+	add	esp, 16
+	mov	DWORD PTR [ebp-16], eax
+	mov	DWORD PTR [ebp-20], OFFSET FLAT:bssvar
+	mov	DWORD PTR [ebp-24], OFFSET FLAT:cntvar
+	mov	DWORD PTR [ebp-28], OFFSET FLAT:main
+	mov	DWORD PTR [ebp-1060], -1
+	call	getpagesize
+	sub	eax, 1
+	mov	edx, eax
+	mov	eax, DWORD PTR [ebp-1060]
+	xor	eax, edx
+	mov	DWORD PTR [ebp-1060], eax
+	call	getpagesize
+	sub	esp, 8
+	push	eax
+	push	OFFSET FLAT:.LC1
+	call	printf
+	add	esp, 16
+	mov	eax, DWORD PTR [ebp-1060]
+	and	eax, DWORD PTR [ebp-12]
+	sub	esp, 4
+	push	eax
+	push	DWORD PTR [ebp-12]
+	push	OFFSET FLAT:.LC2
+	call	printf
+	add	esp, 16
+	mov	eax, DWORD PTR [ebp-1060]
+	and	eax, DWORD PTR [ebp-16]
+	sub	esp, 4
+	push	eax
+	push	DWORD PTR [ebp-16]
+	push	OFFSET FLAT:.LC3
+	call	printf
+	add	esp, 16
+	mov	eax, DWORD PTR [ebp-1060]
+	and	eax, DWORD PTR [ebp-20]
+	sub	esp, 4
+	push	eax
+	push	DWORD PTR [ebp-20]
+	push	OFFSET FLAT:.LC4
+	call	printf
+	add	esp, 16
+	mov	eax, DWORD PTR [ebp-1060]
+	and	eax, DWORD PTR [ebp-24]
+	sub	esp, 4
+	push	eax
+	push	DWORD PTR [ebp-24]
+	push	OFFSET FLAT:.LC5
+	call	printf
+	add	esp, 16
+	mov	eax, DWORD PTR [ebp-1060]
+	and	eax, DWORD PTR [ebp-28]
+	sub	esp, 4
+	push	eax
+	push	DWORD PTR [ebp-28]
+	push	OFFSET FLAT:.LC6
+	call	printf
+	add	esp, 16
+	sub	esp, 8
+	push	OFFSET FLAT:.LC7
+	push	OFFSET FLAT:.LC8
+	call	fopen
+	add	esp, 16
+	mov	DWORD PTR [ebp-32], eax
+	cmp	DWORD PTR [ebp-32], 0
+	je	.L4
+	sub	esp, 12
+	push	OFFSET FLAT:.LC9
+	call	puts
+	add	esp, 16
+	jmp	.L5
+.L6:
+	sub	esp, 8
+	lea	eax, [ebp-1056]
+	push	eax
+	push	OFFSET FLAT:.LC10
+	call	printf
+	add	esp, 16
+.L5:
+	sub	esp, 4
+	push	DWORD PTR [ebp-32]
+	push	1024
+	lea	eax, [ebp-1056]
+	push	eax
+	call	fgets
+	add	esp, 16
+	test	eax, eax
+	jne	.L6
+	sub	esp, 12
+	push	DWORD PTR [ebp-32]
+	call	fclose
+	add	esp, 16
+.L4:
+	sub	esp, 12
+	push	OFFSET FLAT:.LC11
+	call	puts
+	add	esp, 16
+	mov	eax, DWORD PTR [ebp-1060]
+	push	100
+	push	0
+	push	eax
+	push	0
+	call	foo
+	add	esp, 16
+	mov	eax, 0
+	mov	ecx, DWORD PTR [ebp-4]
+	leave
+	lea	esp, [ecx-4]
+	ret
+	.size	main, .-main
+	.ident	"GCC: (Debian 4.9.2-10) 4.9.2"
+	.section	.note.GNU-stack,"",@progbits

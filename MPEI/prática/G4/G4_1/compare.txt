@@ -1,0 +1,38 @@
+DJB31MA: (MELHOR- tempo de execução e numero de atribuições)
+
+Momento 2:  medido- 0.333322 teórico-0.333333
+Momento 5:  medido- 0.166490 teórico-0.166667
+Momento 10: medido- 0.090665 teórico-0.090909
+Numero de colisões = 9502
+Numero de atribuições = 4 
+Tempo de execução = 0.109684 
+
+
+Hashstring:
+
+Momento 2:  medido- 0.332535 teórico-0.333333
+Momento 5:  medido- 0.166169 teórico-0.166667
+Momento 10: medido- 0.090487 teórico-0.090909
+Numero de colisões = 17488
+Numero de atribuições = 10
+Tempo de execução = 1.005765
+
+
+string2hash (caso 2):
+
+Momento 2:  medido- 0.334476 teórico-0.333333
+Momento 5:  medido- 0.168217 teórico-0.166667
+Momento 10: medido- 0.092414 teórico-0.090909
+Numero de colisões = 9331 !!!!!!!!!!
+Numero de atribuições = 4
+Tempo de execução = 0.252968
+
+
+string2hash (caso 1):
+
+Momento 2:  medido- 0.334363 teórico-0.333333
+Momento 5:  medido- 0.167437 teórico-0.166667
+Momento 10: medido- 0.091415 teórico-0.090909
+Numero de colisões = 9451
+Numero de atribuições = 5
+Tempo de execução = 0.173861

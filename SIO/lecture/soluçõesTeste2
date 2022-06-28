@@ -1,0 +1,55 @@
+Sobre GSM:
+	- permite autenticar os terminais móveis mas não permite autenticar a rede (V)
+	- Usa protocolo de autenticação multimétodo (V)
+	- Baseia-se no conhecimento mútuo de uma chave secreta (V)
+	- Não é imune a ataques com dicionários (F)
+	- A posse do módulo SIM onde está a chave secreta é normalmente suficiente para um terminal móvel se 
+	autenticar(F)
+	- Permite delegar a autenticação dos terminais móveis noutras redes (V)
+
+Sobre S/KEY:
+	- o autenticador tem acesso à senha original dos clientes (F)
+	- os autenticados precisam de reinstalar as suas credenciais de autenticação após um determinado número de utilizadores(V)
+	- as senhas descartáveis são geradas a partir de uma senha(V)
+	- permite que, para o mesmo utente, a mesma senha produza senhas descartáveis diferentes para sistemas diferentes(V)
+
+Sobre autenticação desafio-resposta:
+	- não é tipicamente aplicável a autenticações biométricas (V)
+	- é fundamental que os desafios apresentados a uma mesma credencial nunca se repitam (V)
+	- visa proteger as credenciais usadas no processo de autenticação (V)
+	- nao permite uma fácil implementação de protocolos de autenticação mútua (F)
+
+Sobre autenticação de utentes com RSA Secure ID:
+	- é imune a ataques com dicionários (F)
+	- as senhas descartáveis são geradas a partir de uma chave secreta (V)
+	- obriga a que os utentes usem um equipamento próprio (ou aplicação) (V)
+	- a chave secreta de cada utente é gerada a partir de uma senha (V)
+
+Sobre autenticação de utentes baseados em senhas descartáveis:
+	- pode envolver a troca de um desafio para indicar a senha descartável a ser usada (V)
+	- exige que o utente tenha de ter algo para memorizar ou gerar senhas descartaveis (V)
+	- é imune a ataques com dicionários (F)
+	- tipicamente nao permite autenticação mutua (V)
+
+Sobre autenticação no SSH:
+	- usa sempre pares de chaves assimétricas nao certificadas para autenticar o servidor (F)
+	- permite que os utentes se autentiquem de forma fléxivel (V)
+	- protege a autenticação dos clientes realizando-o no âmbito de uma comunicação segura (V)
+	- está bem adaptada para a autenticação de servidores dos quais nada se conhece (exceto o endereço IP, ou o nome DNS) (V)
+
+Sobre autenticação a utentes UNIX/Linux:
+	- usa senhas memorizadas (V)
+	- usa valores guardados em ficheiros inacessíveis aos utentes comuns (V)
+	- nao deverá ser usada para criar sessoes remotas sobre comunicações não seguras (V)
+	- usa uma aproximição desafio-resposta (F)
+
+
+No UNIX/Linux qual dos seguintes direitos está sempre vedado ao dono de um ficheiro (excepto se for root)?
+	- altera o seu dono (V)
+	- alterar a proteçao relativa ao seu dono (F)
+	- eliminar o nome de um ficheiro (F)
+	- alterar o seu grupo (F)
+
+
+
+

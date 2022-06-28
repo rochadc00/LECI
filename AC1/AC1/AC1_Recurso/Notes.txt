@@ -1,0 +1,38 @@
+IEEE:		DONE
+Single Cycle:	DONE
+Multi Cycle: 
+Pipeline: 4h45min (1.5) -> Clérigo explaining
+
+To Do:
+
+Perceber tabelas do Martinho
+
+Exs Epoca Normal Pipeline:
+17,18,20
+
+Exercicios (87)
+Exercicios (170+) (opcional) (pelo menos ler ou dar uma vista de olhos)
+
+Aritméticas e Lógicas:
+R-> 6 bits opcode = 0 pq é tipo R
+    5 bits x3 (rs,rt,rd)
+    5 bits shamt -> shift amount para sl e sr
+    6 bits funct (ALU)
+
+Transferência de Informação e Aritméticas imediatas e Branches:
+I-> 6 bits opcode
+    5 bits x2 (rs,rt)
+    16 bits offset/imediato
+
+Jump incondicional
+J-> 6 bits de opcode
+    26 bits endereço
+ 
+Single cycle: frequência max limitada pelo tempo de execução da instrução mais longa
+aka "lw"
+Multi cycle: frequencia max limitada pelo tempo de execução do elemento
+de estado mais demorado
+aka "Trm(read memory)"
+
+BTA = (PC + 4) + (instruction_offset*4)
+ 	
