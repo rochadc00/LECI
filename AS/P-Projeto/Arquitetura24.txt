@@ -1,0 +1,47 @@
+SERVIÇOS			DB
+			
+login.php:	
+Autenticação		Verificar existencia de user(UserAuth)					ficheiro: login.php que comunica diretamente com a db
+				Verificar validade da password(UserAuth)
+
+API:
+
+Bets 				Consultar e filtrar bets existentes						localhost/api/bets
+				(Streams -> consultar a stream associada à bet)
+				(Bets -> consula os dados da bet)
+								
+	
+Games				Consultar e filtrar jogos existentes
+				(UserGames -> consulta do user que streama o jogo)
+				(Users -> consulta os dados normais do user que streama o jogo)
+				(Games -> consulta dos dados base do jogo)
+
+Streams			Consultar e filtrar streams existentes
+				(UserGames ->consulta o jogo e o user associado à stream)
+				(Games-> consulta dos dados do jogo associados à stream)
+				(Users -> consulta os dados do user associado à stream)
+ 				(Bets -> consulta das bets associadas à stream)
+				(Streams -> consultar os dados da stream em si)
+
+Tickets			Consultar e filtrar boletins existentes
+				(Users -> consulta do user associado ao boletim)
+				(TicketBets -> consultar as apostas associadas a esse boletim)
+				(Tickets -> consultar os dados do ticket)
+
+				Atualizar conteúdo do boletim
+				(Tickets -> alterar os dados base de um boletim )
+				(TicketBets -> adicionar ou remover apostas de um boletim)
+
+				Apagar o boletim
+				(TicketBets -> remover todas as apostas associadas a um boletim)
+				(Tickets -> colocar a zero todos os dados base do boletim)
+
+Users				Consultar e filtrar utilizadores existentes
+				(UserGames -> consultar os jogos que um streamer streama)
+				(Games -> consultar os dados dos jogos que um streamer streama)
+				(Tickets -> consultar os boletins desse user)
+				(UserFavoriteGames -> consultar os jogos favoritos do user)
+				(Users -> consultar os dados base do utilizador)
+
+				Adicionar e remover os jogos favoritos do utilizador
+				(UserFavoriteGames)

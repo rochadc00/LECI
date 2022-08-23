@@ -1,0 +1,28 @@
+Variáveis ?
+- CP = cara preocupada
+- FR = frequencia de utilização de rato
+- PA = precisa de ajuda
+- CNL = correio eletrónico não lido
+- SC = sobrecarga de trabalho (Independente)
+- UPT = está a utilzar o processador de texto (Indepdente)
+
+Dependências (grafo) ?
+
+		UPT	   SC
+	  	   \  /| \
+	 		\/ |  \
+	        PA \  CNL
+			/ \	\
+		   /   \ |
+		  FR    CP 
+	
+
+Probabilidades condicionadas ?
+
+P(SC) = 60%
+P(UPT) = 5%
+
+P(PA|UPT)= 
+
+2,1+4,2+
+1,5+4.2

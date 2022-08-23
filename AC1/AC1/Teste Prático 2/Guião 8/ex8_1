@@ -1,0 +1,13 @@
+	.data
+	.text
+	# Mapa de registos
+	# res: $v0
+	# s: $a0
+	# *s: $t0
+	# digit: $t1 
+	.globl main
+
+main:
+
+atoi:
+	

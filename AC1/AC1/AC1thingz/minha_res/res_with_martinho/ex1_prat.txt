@@ -1,0 +1,50 @@
+1.
+a) 12 bytes
+	(1 char ocupa 1 byte + \0)
+	(e porque o MIPS é byte adressable)
+
+b) 0x1001000C
+
+c) 26/4 = 6,5
+	Logo, a dimensão máxima do array é 6.
+	(cada float ocupa 4 bytes)
+
+d) x2[0] -> 0x1001000C (ir somando 4 bytes)
+   X2[1] -> 0x10010010
+   X2[2] -> 0x10010014
+   X2[3] -> 0x10010018
+   R.: X2[4] -> 0x1001001C
+
+e) 12 bytes + 26 bytes + 1 byte = 39 bytes
+   Ocupa 39 bytes
+
+f) ori -> 4 bytes
+   la -> 8 bytes
+   la -> 8 bytes
+   move -> 8 bytes = 28 bytes
+	L1: 0x0040001C
+   bge -> 8 bytes
+   lb -> 4 bytes
+   bgt ->  8 bytes
+   sb -> 4 bytes
+   addiu -> 4 bytes = 28 bytes
+ 	L2: 0x00400038
+
+g) 
+   $t0 = 9
+   $t4 = &X1
+   $t5 = &X2
+   $t6 = &X2
+	&X1 < &X2 
+   $a0 = T
+	S...T...E...X..2...-...2...0...2...1...\0
+   	$a0 <= 0x39	
+   	$t6 -> 2 - 2 0 2 1 (6x se considerarmos que
+			    completar o ciclo 
+			    inclui cumprir o if) 
+   L3:
+   $v0, 0($t5)
+
+h) 0x1001000C
+
+i) \0

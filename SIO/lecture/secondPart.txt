@@ -1,0 +1,56 @@
+Autenticação: Usada para confirmar e autorizar uma entidade, de modo a conceber lhe acesso a políticas e mecanismos. 5 princípios:
+		
+		- Confiabilidade: Quão bom é a provar a sua entidade, e o quão difícil é rejeitá-la.
+		- Secretismo: Não divulgação de credenciais secretas usadas por utilizadores legitimos.
+		- Rodustez: Prevenir ataques à troca de informação de autenticação.
+		- Simplicidade: A autenticação deve ser o mais simples possível evitando que entidades usem atalhos. 
+		- Lidar com vulnerabilidades feitas por pessoas - Têndencia natural para simplificar e usar atalhos.
+
+
+2 formas principais de autenticação:
+		
+		Direta : providenciar credenciais e esperar pelo veredito.
+			1. Password memorizada - password válida de acordo com um valor guardado pela pessoa. Pode ser concebido através de: transformação unidirecional; UNIX: hash DES com salt; Windows: funçao de sintese; Linux: funçao de sintese MD5.
+			Este método tem como grande vantagem a simplicidade, como grande problema o uso de passwords fracas (permite ataques de dicionário) e a transmissão destas por canais inseguros (facilmente alguém consegue intercetar a password).
+
+			2. Biométrica - A autenticação é feita com partes do corpo da pessoa (ex, impressao digital, íris do olho, timbre da voz, escrita, etc) que são depois comparadas com registos gravados pelo mesmo. Não implica a memorização de passwords para auttenticação. Contudo, tem alguns problemas relacionados com a falta de desenvolvimento ainda deste método e pelo facto de a sua partilha/desenvolvimento remoto não seja possível (limitado). 
+
+			3. One-time Password - Tem como grande vantagem caso a password seja descoberta, não poderá ser novamente usada. Contudo, isto pode ser negativo também pelo facto da pessoa ter de estar constantemente a colocar novas passwords, o que implica que esta a memorize ou então que as guarde em algum lado. Este método é aplicado no RSA SecurID, que tem um token que gera um numero aleatorio por minuto e combina-o com o ID da pessoa que gera a password.
+
+
+		Desafio-resposta: O autenticador providencia um desafio, e quem vai ser autenticado gera uma resposta combase no desafio recebidp e nas suas credenciais de autenticação, e envia-a para o autenticador, esperando pelo veredito (o autenticador gera um resultado de forma semelhante verifica a semelhança entre as duas respostas). Tem como grande vantagem não expor as credenciais de autenticação. Tem como vantagem: a necessidade de haver hardware e software suficiente para computar uma resposta; o autenticador ter de usar provavelmente informação secreta; e pode ocorrer ataques por dicionário contra registos desafio-resposta guardados. Este método é incorporado de várias formas:
+
+			% Smartcards -> São usados para autenticar pessoas. Para isso, faz-se uso da chave privada existente no cartão e do PIN para se aceder a essa chave. Quem vai autenticar a pessoa, deverá ter conhecimento da chave pública correspondente. Aplicando o método desafio-resposta, o autenticador criar um desafio aleatório, e o detentor do smartcard vai cifrar esse desafio com a sua chave privada, envia a resposta, o autenticador decifra a resposta com a chave pública correspondente, e caso o resultado seja igual ao do desafio, a autenticação é bem sucedida.
+
+			% Password memorizada -> Para autenticar, a password é conhecida pela pessoa, e o autenticador vai conhecer uma transformação dessa password. Ele vai gerar um desafio aleatório, a pessoa ao receber vai computar uma transformação unidirecional do desafio e da password (Result = h(challenge, password)), e o autenticador vai fazer exatamente o mesmo. Caso o resultado seja igual à resposta, a autenticação é bem sucedida. Exemplos:
+
+				CHAP(Challenge-Responde Authentication Protocol) - Usado em ponto a ponto, com a autenticação unidirecional(autenticador não é autenticado), e garante melhor segurança que o PAP. O autenticador manda um desafio para a pessoa (com base no ID dela). A pessoa ao receber o desafio vai gerar uma resposta com base num valor calculado por uma hash (MD5, p. ex) sobre o desafio e a password. O autenticador vai receber a resposta, e com base no seu cálculo da hash vai verificar se os valores são iguais. O autenticador pode pedir uma reautenticação a qualquer altura.
+
+				S/KEY - Usa one-time password. O processo vai começar com uma password, gerada ou pelo cliente ou pelo autenticador, e um valor base aleatório, que vai ser comunicado ao cliente. O cliente vai aplicar uma função hash x vezes à password e ao valor base, produzindo uma cadeia de x passwords (x é então um indice). O autenticador vai conhecer então os valores da primeira password gerados, com base no valor base e no primeiro indice. A primeira password nunca vai ser usada pelo cliente para autenticação, mas o autenticador vai usa-la para verificação. O cliente vai então enviar para o servidor a segunda password (indice x-1) e este vai computar a password. Caso dê o valor da primeira password gravada, então a autenticação é válida, e vai guardar a OPT de indice x-1 como referência. O processo repete-se diminuindo o indice da OPT no cliente e no servidor.
+
+				Shared-Key - Ao invés de uma password, usam uma chave partilhada que requer um token para guardar a chave e um canal partilhado seguro para partilhar a chave. Ex: GSM. É um método robusto contra ataques de dicionário.
+
+
+PAP -> Método onde se usa uma password. É inseguro, uma vez que a passwrd é transmitida por código ASCII não encriptado.
+
+GSM -> Controla três tipos de serviços: serviçoes de suporte (comunica com ISDN e PSDN), serviço de telefone (transmissão de voz de alta qualidade, mensagens até 160 car, etc). Este serviços foram reforçados com a WAP (Wireless Application Protocol) e o GPRS (General Packet Radio Service), permitindo enviar pacotes maiores. Esta rede é dividida em:
+	
+	... BTS : Composto por vários BTC's que são responsáveis pela receção e comunicação para os nossos telemóveis, suportando vários alcances e capacidades, cobrindo áreas grandes e espalhadas em zonas com rede mais fraca. A comunicação entre os BTC's e uma BSC controla a possibilidade de deslocarmo-nos para várias áreas sem que a chamada vá abaixo(handover), receber envio de sinais de outros dispositivos distantes, etc.
+
+	... MSC : Controla a handover entre vários BSC's, assim como controla e implementa também serviços sobre os componentes ditos em cima. Além disso, temos também o HLR(Home Location Registor) e o VLR(Visitor Location Register) que funcionam em conjunto como uma base de dados de informação dos utilizadores nas reddes e imediações. O HLR guarda os registos permanentemente, e o VLR guarda-os dinamicamente, permitindo poupança de tempo no acesso ao HLR.
+
+	... Operation Subsystem -> Contem um centro de autenticação(AUC) e equipamento de identificação de registos(EIR), usados para segurança.
+
+	Para garantir a segurança entre redes, é necessário autenticar o utilizador. A rede vai enviar um desafio de 128 bits aleatórios para o telefone do utilizador. De seguida, o cartão SIM do telefone vai usar o algoritmo A3 e o Ki (numero de identificação do SIM) e o valor aleatório do desafio para computar uma SRES (Signed Response) e envia-o para a estação base. É feita a confirmação da autenticação. De seguida, o cartão SIM vai usar o algoritmo A8, o Ki e o valor original do desafio para computar uma chave de sessão (Kc) e envia-a para a estação. O algoritmo aqui usado é A5, para cifrar toda a comunicação feita.
+
+
+Autenticação do HOST --- Pode ser feita por nome ou endereço (nome DNS, endereço IP, endereço MAC ou outro), mas é uma forma bastante fraca de autenticação, uma vez que não usa cifragens (NFS e TCP usam este método). Também pode ser feita entre partilha de chaves entre hosts.
+
+Autenticação do SERVIDOR --- A autenticação do servidor pode ser feita diretamente pelo host, ou pelas credenciais(chaves assimétricas partilhadas).
+
+SSH(Secure Shell) --- Protocolo de rede para comunicação segura ou execução de comandos entre computadores de duas redes(client-server), ligadas por um canal seguro sobre uma rede insegura. Faz iso de chaves assimétricas para autenticar o servidor, e este distribuir chaves públicas pelos hosts que façam conexão com quem possua a chave privada. Dessa forma, o SSH só tem de verificar se o utilizador possui a chave pública que corresponde à sua privada, e dessa forma faz a conexão. A autenticação do client é feita por username e password, ou username e chave privada dele, que devem ser enviadas para o servidor primeiro que a chave pública.
+
+ATAQUE POR DICIONÁRIO --- Técnica usada para descobrir a chave de decifragem ou password através do teste com várias possibilidades. Temos uma lista com palavras, como se de um dicionário se tratasse, e essa lista vai ser corrida e testada exaustivamente com o objetivo de acertar na palavra  que decifra/abre o conteúdo em questão. Normalmente este método tem sempre sucesso, porque uma pessoa tende a colocar como passwords palavras conhecidas e pequenas que constem em dicionários. É uma questão de tempo até a pesquisa encontrar essa palavra. -> Este tipo de ataque foi estudado para o projeto 3
+
+
+

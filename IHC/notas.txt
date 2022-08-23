@@ -1,0 +1,37 @@
+- Bom dia a todos. Hoje vamos vos falar sobre um tema que tem vindo a crescer cada vez mais
+nos ultimos anos: inteligência humana aplicada a robôs, tendo em contra aplicações humanas.
+
+A escolha deste paper recai no interesse mutuo tanto da minha parte como a do rafael sobre robôs e a
+tecnologia que neles está aplicada. Assim sendo, a dúvida principal que nos suscintou um maior interesse foi: de que 
+maneira robôs podem interpretar e executar comportamento humano?
+
+ Portanto, a partir da leitura deste paper foi possível perceber o conceito e funcionamento
+dos seguintes pontos que vos iremos explicar ao longo da apresentação. Estes são:
+	- robos necessitam de se adaptar às preferências humanas, o que lhes implica modificar a sua função de recompensa
+isto é, função que retém todos os recursos e faz deles aplicáveis
+	- robos devem pedir explicitamente por informação que lhes falte ou que não entendam, ao inves de aprender implicitamente
+sobre o mesmo através de demonstrações exaustivas
+	- é então, introduzido um novo tipo de human input, que se chama traços de recurso
+	- por fim, este método é capaz de generalizar as recompensas com menos entrada humana, ao invés de ter uma linha de aprendizagem
+dependente de demonstrações
+
+POrtanto, e começando pela primeira análise. Iremos imaginar uma situação onde temos um robô que segura uma caneca
+muito acima do nível da mesa. Um humano ao observar o robô a executar esta tarefa, percebe que os resultados que observa estão muito àquem
+do desejavel ou que se espera.
+Desta maneira, decide corrigir o robô. Este então desce o manípulo do robô para próximo da mesa, e o robô reconhece esta ação (ou seja, compreende 
+o desejo do humano) foi os recursos que apresenta permitem-lhe tal. ou seja, tem recursos para movimentos específicos. Porém, se o desejo
+do humano for distanciar o manípulo do robô do computador, então este empurra o manípulo para longe. Contudo, o robô não entende
+o verdadeiro propósito do humano pois não consegue ter qualquer tipo de noção acerca de distancia. Concluimos então que, existem recursos, features, que
+o robô não apresenta capacidade o suficiente de interpretação ou entendimento. 
+
+Para que estes recursos em falta sejam aprendidos, então foi criada uma experiencia que implementa duas realidades diferentes com o mesmo objetivo:
+	- a primeira inclui usuários que conhecem o funcionamento dos recursos e um manipulador de robô. 
+	- o segundo, é um usuário online que recria o laboratório num simulador (ou seja, a mesma situação que em cima mas simulada) 
+
+Em ambos os casos, foram feitos então seis casos de uso de recursos:
+	- em termos qualitativos: caso de aproximação da caneca ao pc, ou à mesa, ou outros aspetos. 
+	se observarmos com atenção, aqui o ponto a claro representa a localização do pc e a funçao de recompensa nesta zona. a zona a amarelo significa
+que a recompensa é baixa, ou seja, quanto mais proximo do pc e distante da mesa, pior é a recompensa. ao contrário do caso em que nos distanciamos no pc e aproximamos da mesa.
+
+	- em termos quantitativos: temos aqui 10 destes para cada um dos seis casos e em todos é possível perceber que há medida que se vão fazendo mais testes, melhor é o resultado na
+função de recompensa

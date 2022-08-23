@@ -1,0 +1,8 @@
+O serviço B precisa dos serviços fornecidos pelo serviço A
+-o = oferece
+-c = consume
+
+
+5.2)
+
+a) Sistema windows da Microsoft

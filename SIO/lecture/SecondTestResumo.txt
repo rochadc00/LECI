@@ -1,0 +1,571 @@
+SmartCards --- Cartões que fornecem identificação, autenticação, armazenamento de dados e processamento de aplicações. Tem como principais componentes: CPU(8 ou 16 bits), uma ROM (comunicação e algoritmos de cifragem), uma EEPROM (sistema de ficheiros com programas, aplicações, chaves e passwords), uma RAM (para transição de informação), contatos mecânicos (reset,power,clock,I/O) e segurança física (inviolável). A comunicação entre o cartão e o leitor de cartões é feita pelo APDU ( Application Protocol Data Unit), que existe na forma de comando ( enviado pelo leitor ao cartao) que tem um cabeçalho de 4 bytes e até 255 bytes de informação, e resposta(enviada pelo cartao ao leitor) que contem uma word de 2 bytes e até 256 bytes de informação. A troca de informação pode ser feita byte a byte(mais lento) ou por blocos de bytes(mais rápido). O sistema de ficheiros de um smartcard contem:
+
+	1. identificação do ficheiro
+	2. tipo de ficheiro
+	3. tipo de sistema de ficheiro
+	4. controlo de acesso
+
+Em termos de cifragem, temos vários pontos que vão ser necessários proteger, cifrando-os:
+
+	> Autenticação externa : Smartcard autentica o leitor com o protocolo desafio-resposta com um número aleatório. O processo é iniciado pelo leitor. 
+
+	> Autenticação interna : O leitor autentica o cartão com o protocolo desafio-resposta com um número aleatório de uma chave. Processo iniciado pelo leitor;
+
+	> Troca de mensagens segura : Proteger informação lida e escrita no cartão. Pode-se proteger por MAC ou MAC e cifragem de informação.
+
+	> Leitura autenticada : Leitor e cartão trocam um número aleatório, a informação a ler é requerida, e depois enviada com um MAC.
+
+	> Escrita autenticada : Leitor e cartão trocam um número aleatório, a informação a escrever é enviada com um MAC, e a confirmação é feita por um OK ou NOK.
+
+	> Leitura autenticada e confidencial : Leitor e cartão trocam numero aleatorio, a informaçao a ler é requerida, e depois enviada cifrada com a chave e o MAC.
+
+	> Escrita autenticada e confidencial : Leitor e cartão trocam numero aleatório, a informação a escrever é enviada cifrada com o MAC.
+
+	> Derivação da chave sessao : A chave é requerida, e é enviado um número aleatório que permite derivar a chave.
+
+	> Upload da chave de sessao.
+
+
+
+JAVACARD : Smartcards que correm Java Applets através de JCRE, criando uma máquina virtual Java que permite usar funções da biblioteca Java Card Framework.
+
+
+
+Autenticação --- Usada para confirmar e autorizar uma entidade, de modo a conceber lhe acesso a políticas e mecanismos. 5 princípios:
+		
+		- Confiabilidade: Quão bom é a provar a sua entidade, e o quão difícil é rejeitá-la.
+		- Secretismo: Não divulgação de credenciais secretas usadas por utilizadores legitimos.
+		- Rodustez: Prevenir ataques à troca de informação de autenticação.
+		- Simplicidade: A autenticação deve ser o mais simples possível evitando que entidades usem atalhos. 
+		- Lidar com vulnerabilidades feitas por pessoas - Têndencia natural para simplificar e usar atalhos.
+
+
+2 formas principais de autenticação:
+		
+		Direta : providenciar credenciais e esperar pelo veredito.
+			1. Password memorizada - password válida de acordo com um valor guardado pela pessoa. Pode ser concebido através de: transformação unidirecional; UNIX: hash DES com salt; Windows: funçao de sintese; Linux: funçao de sintese MD5.
+			Este método tem como grande vantagem a simplicidade, como grande problema o uso de passwords fracas (permite ataques por dicionário) e a transmissão destas por canais inseguros (facilmente alguém consegue intercetar a password).
+
+			2. Biométrica - A autenticação é feita com partes do corpo da pessoa (ex, impressao digital, íris do olho, timbre da voz, escrita, etc) que são depois comparadas com registos gravados pelo mesmo. Não implica a memorização de passwords para auttenticação. Contudo, tem alguns problemas relacionados com a falta de desenvolvimento ainda deste método e pelo facto de a sua partilha/desenvolvimento remoto não seja possível (limitado). 
+
+			3. One-time Password - Tem como grande vantagem caso a password seja descoberta, não poderá ser novamente usada. Contudo, isto pode ser negativo também pelo facto da pessoa ter de estar constantemente a colocar novas passwords, o que implica que esta a memorize ou então que as guarde em algum lado. Este método é aplicado no RSA SecurID, que tem um token que gera um numero aleatorio por minuto e combina-o com o ID da pessoa que gera a password.
+
+
+		Desafio-resposta: O autenticador providencia um desafio, e quem vai ser autenticado gera uma resposta com base no desafio recebido e nas suas credenciais de autenticação, e envia-a para o autenticador, esperando pelo veredito (o autenticador gera um resultado de forma semelhante verifica a semelhança entre as duas respostas). Tem como grande vantagem não expor as credenciais de autenticação. Tem como vantagem: a necessidade de haver hardware e software suficiente para computar uma resposta; o autenticador ter de usar provavelmente informação secreta; e pode ocorrer ataques por dicionário contra registos desafio-resposta guardados. Este método é incorporado de várias formas:
+
+			% Smartcards -> São usados para autenticar pessoas. Para isso, faz-se uso da chave privada existente no cartão e do PIN para se aceder a essa chave. Quem vai autenticar a pessoa, deverá ter conhecimento da chave pública correspondente. Aplicando o método desafio-resposta, o autenticador cria um desafio aleatório, e o detentor do smartcard vai cifrar esse desafio com a sua chave privada, envia a resposta, o autenticador decifra a resposta com a chave pública correspondente, e caso o resultado seja igual ao do desafio, a autenticação é bem sucedida.
+
+			% Password memorizada -> Para autenticar, a password é conhecida pela pessoa, e o autenticador vai conhecer uma transformação dessa password. Ele vai gerar um desafio aleatório, a pessoa ao receber vai computar uma transformação unidirecional do desafio e da password (Result = h(challenge, password)), e o autenticador vai fazer exatamente o mesmo. Caso o resultado seja igual à resposta, a autenticação é bem sucedida. Exemplos:
+
+				CHAP(Challenge-Responde Authentication Protocol) - Usado em ponto a ponto, com a autenticação unidirecional(autenticador não é autenticado), e garante melhor segurança que o PAP. O autenticador manda um desafio para a pessoa (com base no ID dela). A pessoa ao receber o desafio vai gerar uma resposta com base num valor calculado por uma hash (MD5, p. ex) sobre o desafio e a password. O autenticador vai receber a resposta, e com base no seu cálculo da hash vai verificar se os valores são iguais. O autenticador pode pedir uma reautenticação a qualquer altura.
+
+				S/KEY - Usa one-time password. O processo vai começar com uma password, gerada ou pelo cliente ou pelo autenticador, e um valor base aleatório, que vai ser comunicado ao cliente. O cliente vai aplicar uma função hash x vezes à password e ao valor base, produzindo uma cadeia de x passwords (x é então um indice). O autenticador vai conhecer então os valores da primeira password gerados, com base no valor base e no primeiro indice. A primeira password nunca vai ser usada pelo cliente para autenticação, mas o autenticador vai usa-la para verificação. O cliente vai então enviar para o servidor a segunda password (indice x-1) e este vai computar a password. Caso dê o valor da primeira password gravada, então a autenticação é válida, e vai guardar a OPT de indice x-1 como referência. O processo repete-se diminuindo o indice da OPT no cliente e no servidor.
+
+
+				Shared-Key - Ao invés de uma password, usam uma chave partilhada que requer um token para guardar a chave e um canal partilhado seguro para partilhar a chave. Ex: GSM. É um método robusto contra ataques de dicionário.
+
+
+PAP --- Método onde se usa uma password. É inseguro, uma vez que a passwrd é transmitida por código ASCII não encriptado.
+
+
+GSM --- Controla três tipos de serviços: serviçoes de suporte (comunica com ISDN e PSDN), serviço de telefone (transmissão de voz de alta qualidade, mensagens até 160 car, etc). Este serviços foram reforçados com a WAP (Wireless Application Protocol) e o GPRS (General Packet Radio Service), permitindo enviar pacotes maiores. Esta rede é dividida em:
+	
+	... BTS : Composto por vários BTC's que são responsáveis pela receção e comunicação para os nossos telemóveis, suportando vários alcances e capacidades, cobrindo áreas grandes e espalhadas em zonas com rede mais fraca. A comunicação entre os BTC's e uma BSC controla a possibilidade de deslocarmo-nos para várias áreas sem que a chamada vá abaixo(handover), receber envio de sinais de outros dispositivos distantes, etc.
+
+	... MSC : Controla a handover entre vários BSC's, assim como controla e implementa também serviços sobre os componentes ditos em cima. Além disso, temos também o HLR(Home Location Registor) e o VLR(Visitor Location Register) que funcionam em conjunto como uma base de dados de informação dos utilizadores nas reddes e imediações. O HLR guarda os registos permanentemente, e o VLR guarda-os dinamicamente, permitindo poupança de tempo no acesso ao HLR.
+
+	... Operation Subsystem -> Contem um centro de autenticação(AUC) e equipamento de identificação de registos(EIR), usados para segurança.
+
+	Para garantir a segurança entre redes, é necessário autenticar o utilizador. A rede vai enviar um desafio de 128 bits aleatórios para o telefone do utilizador. De seguida, o cartão SIM do telefone vai usar o algoritmo A3 e o Ki (numero de identificação do SIM) e o valor aleatório do desafio para computar uma SRES (Signed Response) e envia-o para a estação base. É feita a confirmação da autenticação. De seguida, o cartão SIM vai usar o algoritmo A8, o Ki e o valor original do desafio para computar uma chave de sessão (Kc) e envia-a para a estação. O algoritmo aqui usado é A5, para cifrar toda a comunicação feita.
+
+
+Autenticação do HOST --- Pode ser feita por nome ou endereço (nome DNS, endereço IP, endereço MAC ou outro), mas é uma forma bastante fraca de autenticação, uma vez que não usa cifragens (NFS e TCP usam este método). Também pode ser feita entre partilha de chaves entre hosts.
+
+Autenticação do SERVIDOR --- A autenticação do servidor pode ser feita diretamente pelo host(chaves secretas partilhadas com clientes), ou pelas credenciais(chaves assimétricas partilhadas).
+
+
+TLS -> Comunicações seguras sobre TCP/IP; Mecanismos de segurança: confidencialidade e integridade da comunicação; autenticação das entidades intervenientes.
+
+Chiphersuites:
+
+	. Se um servidor usa um algoritmo específico, não é de esperar que todos os clientes o suportem.
+	. A noção de ciphersuites é o que permite negociação de mecanismos entre clientes e servidores.
+
+	- Exemplo: ECDHE-RSA-AES128-GCM-SHA256
+
+
+SSH(Secure Shell) --- Protocolo de rede para comunicação segura ou execução de comandos entre computadores de duas redes(client-server), ligadas por um canal seguro sobre uma rede insegura. Faz uso de chaves assimétricas para autenticar o servidor, e este distribuir chaves públicas pelos hosts que façam conexão com quem possua a chave privada. Dessa forma, o SSH só tem de verificar se o utilizador possui a chave pública que corresponde à sua privada, e dessa forma faz a conexão. A autenticação do client é feita por username e password, ou username e chave privada dele, que devem ser enviadas para o servidor primeiro que a chave pública.
+
+-> chaves de longa duração em /etc/ssh
+-> lista de numeros primos (/etc/ssh/moduli)
+-> informaçao pessoal de cada utilizador em ~/.ssh
+
+
+Autenticação em Sistemas Específicos:
+
+	. Dispositivos operam frequentemente com base na identidade de um sujeito;
+	. Validação de identidade é feita contra um modelo/ou credenciais
+	. Normalmente fornecem mecanismos de autenticação local
+
+	> Dispositivos móveis: -smartphones; -tablets;
+	> Computadores pessoais: portáteis ou desktops;
+	> computadores em redes: ambientes empresariais ou universitários;
+
+ATAQUE POR DICIONÁRIO --- Técnica usada para descobrir a chave de decifragem ou password através do teste com várias possibilidades. Temos uma lista com palavras, como se de um dicionário se tratasse, e essa lista vai ser corrida e testada exaustivamente com o objetivo de acertar na palavra  que decifra/abre o conteúdo em questão. Normalmente este método tem sempre sucesso, porque uma pessoa tende a colocar como passwords palavras conhecidas e pequenas que constem em dicionários. É uma questão de tempo até a pesquisa encontrar essa palavra. -> Este tipo de ataque foi estudado para o projeto 3.
+
+
+OS: Windows
+	
+	. Suporta variados métodos de autenticação(PIN, senhas, biometria, smartcards, tokens)
+	. Credenciais armazenadas no SAM
+
+	-> Windows PIN:
+			- suportado por um módulo seguro TPM (fornece armazenamento seguro, muito mais simples e pouco robusto)
+			- introduçao do codigo PIN desbloqueia chaves
+
+
+API - As APIs são um conjunto de padrões que fazem parte de uma interface e que permitem a criação de plataformas de maneira mais simples e prática para desenvolvedores. A partir de APIs é possível criar softwares, aplicativos, programas e plataformas diversas. 
+ṔAM --- Biblioteca que fornece uma API que permite a integração de multiplos esquemas de autenticação num único host ou em aplicações, evitando assim mecanismos de autenticação complexos e garantindo mais segurança. Permite alterar políticas de autenticação simplesmente editando ficheiros configuráveis e fornece interfaces que permitem interação com linha de comandos, smartcards, leitores biométricos, etc. No geral, a API do PAM vai dividir a autenticação em quatro pequenos grupos:
+		
+		1. Autenticação -> Verificar identididade.
+		2. Gestao de contas -> Aplicação de politicas de acesso com base nas propriedades da conta.
+		3. Gestao de passwords -> Controlo do processo de modificação de uma password.
+		4. Gestao de sessoes -> Verificar e aplicar parametros de uma sessao (maximo de memoria, etc).
+
+
+A biblioteca da API fornecida pelo PAM é carregada dinamicamente(/lib/security/pam_*.so). Existe também um ficheiro configurado pelo cliente que especifica mecanismos e parâmetros a usar.
+
+Autenticação LINUX --- Autenticação é feita através de um username e uma password. UID: /etc/passwd; GID: /etc/group; password cifrada: /etc/shadow (este ficheiro só pode ser lito pelo root, protegendo o contra ataques). Validação - via PAM
+
+
+SSO:
+
+	-> Explora sistemas externos de confiança (TTP) para autenticação (sistemas externos, ex: Google).
+	-> Serviços de AAA: Autenticação, Autorização e Accounting
+
+	Vantagens:permite a reutilizaçao das mesmas credenciais em multiplos sistemas;
+			  repositorio unico para credenciais;
+			  pode implementar restriçoes(vistas) ao perfil para cada sistema.
+
+	Desvantagens:requer mais recursos para o sistema de autenticação;
+				 unico ponto de falha;
+				 falha implica perde de acesso a todos os sistemas;
+				 introduz atrasos nos processos de autenticaçao
+
+	-> Requer agente que expoe utilizadores remotos nos sistemas locais
+	-> pode fornecer informaçao adicional do perfil
+	-> sistemas que fazem uso de SSO têm de ser aprovisionados 
+
+SSO: LDAP
+	. Protocolo para manter um dir de informaçao
+	. Acesso ao dir pode ter partes publicas e restritas
+	. LDAP Bind: associa uma sessao a um utilizador
+		Login: caminho (dn=user,ou=people,ou=deti,dc=ua,dc=pt)
+
+
+SSO: Kerberos
+	. Protocolo de autenticaçao para ambientes de rede
+	. Suporta autenticaçao mutua
+	. Quarto entidades chave
+	. Key Distribution Center = AS + TGS (+ base de dados)
+
+	-> Client auth:
+		--- user envia pedido ao AS com o seu clientID
+		--- AS responde com 2 mensagens (A e B);
+		--- user usa a sua chave para decifrar A
+		--- Envia pedido ao TGS com 2 mensagens (C e D);
+		--- TGS responde com duas mensagens (E e F).
+
+
+Segurança em sistemas operativos --- Podemos dividir um sistema operativo em duas camadas, uma onde atuam os utilizadores, ao nível das aplicações, sem acessos priveligiados, e outra ao nível do kernel, onde atuam os supervisores, com acessos priveligiados. O kernel (nucleo) é o ponto central do SO, fazendo uma ponte entre as aplicações e o processamentos de dados ao nível do hardware. É ao nível do kernel que são aplicadas as políticas de segurança e são implementadas os mecanismos de segurança de um SO. O kernel vai gerir um conjunto de entidades que vão formar o modelo computacional: identificadores de utilizadores, processos, memória virtual, ficheiros e sistemas de ficheiros, canais de comunicação e dispositivos fisicos. 
+
+		> Identificadores de utilizadores : Para o kernel, um utilizador é um número estabelecido durante o login(UID). Todas as atividades executadas num computador têm em função o UID, ou seja, é ele que define as atividades que são permitiddas ou não. Em linux, todo o utilizador administrativo tem um UID 0, e em Windows, vários utilizadores podem ter privilégios de administrador (normalmente através de grupos de administradores), não havendo um UID definido. Um utilizador pode pertencer a um ou vários grupos, idenfiticados por um GID. Dessa forma, os privilégios que um utilizador tem são os seus, e os do seu grupo. Em Linux, todas as atividades são executadas em função de um conjunto de grupos.
+
+		> Processos : Define o contexto de uma atividade, tanto para questões de segurança como para outros aspetos. Para o contexto da segurança, deve-se ter sempre em conta a entidade (UID e GID), e os recursos em uso (ficheiros abertos, memória virtual reservada, tempo de cpu usado).
+
+
+O kernel gere controlo de acesso com base em mecanismos já estudados:
+
+		< MAC - O kernel está cheio de políticas MAC, como por ex, o facto de o Kernel correr em modo priveligiado, e as aplicações correrem em modo náo priveligiado, separação de memória virtual, limites de reserva de recurso, sinalizações entre processos, etc;
+
+		< Protection with ACLs -  Pode ser MAC (nao pode ser anulada) ou DAC (pode ser adaptada). Cada objeto tem uma ACL, que indica o que o sujeito pode fazer ou não, e essa ACL é verificada sempre que uma atividade tenta aceder a um objeto por ordem de um sujeito. O kernel é o responsavel por aplicar proteção à base ACL's. Em Linux, cada objeto tem uma ACL com 3 tipos de permissões (escrita, leitura e execução) e apenas o dono pode alterar a ACL(estrutura DAC). Em Windows, as ACL's aplicam-se a ficheiros NFTS, onde cada objeto tem uma ACL e um dono. A ACL garante 14 tipos de permissões(Execute,Read,Create,Delete,etc) a uma lista de sujeitos (UID ou GID).
+
+		< Protection with Capabilities - Pouco comuns em Kernels.
+
+
+Os mecanismos set-UID permite que um simples utilizador aceda a ficheiros com o UID do dono ou do grupo em que está (conhecido como SUDO em Linux), é um set-UID com UID = 0, permitindo agir no sistema como root -> elevaçaõ de privilégios
+
+Agora, para que haja uma redução de privilégios, é usado o comando chroot, que aplicado a um diretório, vai isolar todo o conteudo desse diretório e filhos, impendindo acesso a conteúdo fora desse diretório. 
+- cada descritor de processo possui o numero do i-node raiz
+- chroot permite mudar esse numero para referir o i-node de outra diretoria arbitrária
+
+
+Controlos de acesso:
+		
+		-> Matriz: Sujeitos(linhas) e os objetos(colunas) e o devido acesso;
+		-> ACL's: 
+			- cada obj possui uma ACL ( diz quem pode fazer o quê);
+			- a ACL pode ser discricionária ou obrigatória:
+				_ qd é obrigatoria n se consegue modificiar
+				_ qd é discricionária pode ser alterada
+			- é verificada quando uma atividade pretende manipular o obj	_ se o pedido de manipulaçao n estiver autorizado é negado
+				_ quem faz as validações das ACLs é o kernel
+
+			ACL pode ter dimensão fixa: 
+				_ cada elem de fich possui uma ACL
+				_ direitos sobre ficheiros e dir: R W X
+				_ entidades : UID(dono), GID e demais
+
+			ACL pode ter dimensão variável:
+				_ cada elem de fich possui uma ACL e um dono
+				_ direitos: imensos
+				_ entidades: users singulares e grupos de users
+
+		Discricionário : SandBox --- cria uma barreira à volta de um ambiente de execução Java, e as aplicaçõe a decorrer são executadas apenas nesses limites da caixa e impedidas de usar recursos fora da caixa.
+
+
+Aneis de execução : mecanismo de proteção hierarquico, que visa proteger dados. Cada anel traduz um nível de privilégio, sendo o anel mais interior o de maior privilégio. Para os aneis comunicarem entre si, são usados portões(gates) especiais entre eles.
+
+Execução de máquinas virtuais - é criado um anel de nível -1, abaixo do nível 0, com privilégios ainda mais acrescidos(hipervisor). Uma maquina virtual é capaz de virtualizar hardware de vários kernel de nível 0.
+
+
+ARMAZENAMENTO:
+
+	Problemas:
+	. Os dispositivos de armazenamento avariam
+	. o acesso mecânico à informaçao é lento (discos)
+	. dispositivos sólidos (SSD) possuem números de escritas reduzidas
+	. existem eventos que levam à perda total de dados
+	. pode ser necessário distribuir dados de forma inteligente
+
+
+	Soluções:
+	. Cópias de segurança (backups)
+	. armazenamento redundante (RAID)
+	. discos mais caros, ambientes mais controlados
+	. infraestruturas dedicadas de armazenamento
+
+BACKUPS:
+
+	-> copias periódicas de dados (permitem repor fich para versoes anteriores e por vezes sao cifradas)
+	-> completos: imagem completa de informaçao (recuperaçao rapida mas necessário muito espaço)
+	-> diferencial: diferenças desde o último backup completo ( recuperaçao mais lente com reduçao de espaço (vao aumentando progressivamente de tamanho))
+	-> incremental: diferenças desde o último backup ( recuperaçao muito mais lenta, grande eficiencia de espaço)
+
+	. Não é armazenar informaçao num disco adicional (externo, remoto)
+	. Considera políticas, mecanismos e processos para realizar, manter e recuperar cópias de informação ( que resista a várias situações e que considere a realização da cópia, armazenamento e restauro)
+	. Enquadramento legal obriga a cuidadp especial
+
+
+	Níveis:
+
+		Aplicacional;
+
+		Ficheiros <- copia de fich individuais, permite copiar qualquer aplicação e o estado guardado pode ser inconsistente.
+
+		Sistema de ficheiros <- mecanismos próprios do sistema de fich, criaçao de registos de alteraçao periódicos, pode permitir recuperar fichs individuais ou não.
+
+		blocos <- cópia de blocos de suporte de armazenamento, pode ser realizado pela infraestutura de armazenamento.
+
+	Local da Cópia:
+
+		No mesmo volume ou sistema -> permitem aos utilizadores rapidamente recuperar informaçao e protege contra alteraçoes/remoçoes indevidas de ficheiros;
+		Num sistema localizado na mesma infraestutura -> acesso rápido e protege contra falhas isoladas do armazenamento;
+
+		.Remotos(OFF-site) -> realizados para um sistema a uma grande distancia; permitem recuperar informação em caso de evento com grandes danos; recuperaçao de informação muito mais lente.
+
+
+Seleçao do Equipamento: Ajustado ao nível de desempenho -> tier 0 ( desempenho mt alto e baixa capacidade), tier 1 ( desempenho, capacidade e disponibilidade altos) e tier 2 (desempenho baixo, alta capacidade).
+
+
+RAID:
+	. Garantir a sobrevivencia da informaçao ( os dados só se perdem se falharam mais do que X discos do RAID, o valor de X depende do tipo de RAID);
+	. Soluçao de baixo custo e eficiente;
+	. Mas o RAID não substitui o backup!
+	. E o RAID pode aumentar a probabilidade de falha do sistema ( se o objetivo for apenas acelerar o mesmo).
+
+
+RAID 0 (striping):
+
+	Objetivos:
+		- acelerar o acesso à informaçao em disco.
+	Aproximaçao
+		- acesso a discos em paralelo.
+		- striping ( a informaçao lógica de um volume é subdividida em fatias, as fatias são intercaladas nos discos).
+
+	Prós
+		- aceleraçao dos acessos aos discos ate N vezes
+
+	Contras
+		- aumento da probabilidade de perda de informaçao ( probabilidade de perda de informaçao com N discos é 1-(1-PF)*N, sendo PF probabilidade de falha de um disco)
+		- aumento do numero de dispositivos ( pelo menos para o dobro)
+
+RAID 1 (mirroring):
+
+	Objetivo:
+		- tolerar falha de discos
+	Aproximaçao
+		- duplicaçao de informaçao (escrita sincronizada e leitura com comparaçao ou de apenas um disco, mais rapido).
+
+	Vantagens
+		- diminuiçao da probabilidade de perda de informaçao ( considerando a prob de falha de um disco, a prob de perde de dados com N discos é (PFD)-N)
+
+	Desvantagens
+		- desperdício da capacidade de armazenamento ( pelo menos 50% da capacidade é perdida em 2 discos, 66% em 3 discos... (N-1)/N)
+		- aumento do numero de dispositivos ( pelo menos para o dobro)
+
+
+RAID 0+1:
+
+	Objetivos:
+		- benefícios da RAID 0 (desempenho)
+		- benefícios da RAID 1 (resistẽncia a falhas)
+	Aproximaçao
+		- Um nível RAID 0 de volumes em RAID 1.
+		- ou seja, mirroring de volumes striped
+
+	Contras
+		- desperdício da capacidade de armazenamento ( pelo menos 50% da capacidade é perdida )
+		- aumento do numero de dispositivos necessários
+
+RAID 4
+	
+	Objetivos:
+		- proteçao do RAID 1
+		- ter um desempenho e uma eficiencia de espaço proximos de RAID 0
+
+	Aproximaçao
+		- armazenamento de dados em N-1 discos.
+		- armazenamento de paridade num disco ( o desperdício de espaço é igual à capacidade de cada disco)
+
+	Contras
+		- necessita de 3 ou mais discos
+		- a atualizaçao da paridade é complexa e demorada
+		- a recuperaçao é mais demorada do que com RAID 1
+
+RAID 5
+
+	Objetivos:
+		- similar ao RAID 4 mas mais eficiente nas escritas
+
+	Aproximaçao
+		- blocos de paridade espalhados por todos os discos
+		- o desperdício de espaço é igual ao do RAID 4
+		- a concorrencia nas escritas é melhorada
+
+	Contras
+		- mais complexo do que o RAID 4
+
+RAID 6
+
+	Objetivos:
+		- melhor fiabilidade do RAID 5
+
+	Aproximaçao
+		- 2 blocos de paridade espalhados por todos os discos
+		- o desperdício de espaço é maior do que o RAID 5
+		- a concorrencia nas escritas é ligeiramente pior que o RAID 5
+
+	Problemas
+		- mais complexo do que o RAID 5
+
+	Vantagens
+		- permite falha em simultanea de 2 discos 
+
+
+Confidencialidade do Armazenamento:
+
+		"O sistema de fichs tradicional possui proteçoes que são limitadas"
+
+	. Proteções Físicas: sistema de ficheiros é confinado a um dispostivo
+	. Proteçao Lógica: O controlo de acesso é aplicado pelo sistema operativo, faz-se uso de ACLs e outros mecanismos de confinamento
+
+		"Existe um número de situaçoes onde esta proteçao é irrelevante"
+
+	. No caso de acesso direto e físico aos dispositivos
+	. Acesso através dos mecanismos de controlo de acesso
+
+	Prevalência de armazenamento distribuído
+
+		-> Necessária confiança em vários administradores
+		-> autenticação é efetuada remotamente
+		-> informaçao é transmitida na rede
+
+	Soluções: Cifra de informação
+		-> Cifra/Decifra do conteúdo dos fichs
+		-> Problemas : acesso à informaçao, partilha de fichs, possível interferência com tarefas comuns de administraçao
+
+
+		< Nível aplicacional : A informação é cifrada/decifrada por aplicações autonomas. A partilha de ficheiros envolve partilha de chaves. Ex: PGP e TrueCrypt.
+
+		< Nível Device Drivers : A cifra/decifragem neste nível garante transparência total para aplicação e para o SO. Não é possivel distinguir o acesso de diferentes utilizadores e visualizar dados protegidos. Ex: PGPdisk e Secure Digital Cards.
+
+		< Nível de Sistemas de ficheiros : Alguns ficheiros não podem ser escondidos porque têm funções administrativas(tipos de objetos, dimensão, etc), e outras podem (nome do dir, conteúdo do fich). Temos então dois sistemas de fich:
+
+				- CFS : Usado em Linux, permite guardar os nossos ficheiros numa forma cifrada num dir normal. Tanto o nome como o conteúdo do fich sao cifrados usando duas chaves privadas e um pass:
+					- A cifragem do nome é feita com ECB, onde vai ser concatenado com um valor de controlo de integridade;
+					- A cigrafem do conteúdo é feita com XOR de uma cifra contínua OFB(recebe uma das chaves) e uma cifra de blocos ECB(recebe a segunda chave). O valor de vetorização vai sendo alterado e guardado num nó GID.
+
+				A partir da chave, faz-se a decifra do conteúdo do fich. Este processor é realizado graças a uma montagem chamada ATTACH. O fich fica em cache e todos os users podem lê-lo. Ao terminar a sessao CFS estamos a fazer um "detach", fazendo desaparecer os ficheiros decifrados até à proxima vez que fizermos attach a ele.
+
+
+				- EFS : Usado em Windows, cifra o sistema de ficheiros na sua totalidade, mas de forma transparente. Isto é, o utilizador normal vê o seu sistema de ficheiros na sua totalidade, sem alterações. Um utilizador vai receber do servidor EFS um conjunto de chaves assimétricas, baseadas na sua pass. Cada fich vai ser convertido usando uma chave simétrica chamada FEK. Para cada ficheiro, o EFS vai cifrar a FEK com a chave pública do utilizador(usando RSA),e vai guardar esses regists numa espécie de corrente associada ao ficheiro.
+
+
+
+
+Segurança em redes IEEE 802.11
+
+Comunicaçao sem fios: aspetos de segurança
+
+	- comunicaçao efetuada em BroadCast ( dificil controlar a propagaçao fisica e limitaçoes fisicas sao pouco eficientes contra interferencias em comunicaçoes)
+	- mitigaçao ( ao nivel fisico, PHY, ao nivel dos dados, MAC)
+
+	PHY: reduçao da interferencia e interceçao
+
+		> prevenir que os atacantes descodifiquem o canal (necessitam de chave secreta)
+		> ex: blutooth FHSS
+
+		> evita que o canal seja monopolizado por transmissores 
+		> ex: blutooth FHSS, Wi-Fi, GSM
+		Nota: interferencia ainda é possível devido a emissores externos ou sobreposiçao de canais
+
+	MAC: reduçao de interferencia e interceçao
+
+		> evita que atacantes identifiquem os participantes numa comunicaçao (cabeçalho das tramas cifrado, utilizaçao de IP temporário)
+		> evita que atacantes compreendam os dados (conteudo nas tramas é cifrado)
+		> evita que atacantes forjem tramas válidas (tramas necessitam de ser autenticadas)
+
+
+	Arquitetura em Redes Estruturadas
+		--- Estaçao(STA): dispositivo que se liga a uma rede sem fios, possui um ID unico ( endereço MAC )
+		--- Ponto de Acesso (AP): dispositivo que permite a ligaçao de dispositivos sem fios, pode permitir a interligaçao a outras redes com fios
+		--- Rede sem fios: conjunto formado por um conjunto de STAs e APs associados entre si e comunicando
+
+	Terminologia
+		--- BSS: Rede formada por estações associadas a um AP
+		--- ESS: Rede formada por várias BSS interligadas por um DS
+		--- SSID: identificador de uma rede sem fios servida por uma BSS por ESS; Um AP pode fornecer vários SSIDs
+
+
+	Autenticaçao e Associação:
+
+		1. Não autenticado - Não Associado
+		2. Autenticado - Não Associado (autenticaçao)
+		3. Autenticado - Associado (associaçao)
+		4 Autenticado - Não Associado (desassociaçao)
+		5. Não autenticado - Não Associado (desautenticação)
+
+	WEP:
+		. Autenticação unilateral e facultativa
+		. Open System Authentication ( sem necessidade de autenticar)
+		. Shared Key Authentication ( desafio resposta entre STA e AP, chave distinta por client(MAC) ou rede, autenticaçao unilateral da STA (AP nao é autenticado))
+		. Dados (cifrados e autenticados)
+
+		-> é completamente inseguro, mesmo com SKA
+		-> a mesma chave para autenticaçao e confidencialidade
+		-> controlo de integridade fraco
+		-> fraca gestão de IVs
+
+	WPA:
+		-> faz uso do WEP de uma forma mais segura
+		-> implementado inicialmente ao nivel do driver
+		-> alinhado com a especificação IEEE 802.11i
+
+	WPA: TKIP
+		-> chaves temporais
+		-> sequencias de mensagens (evitar repetiçao/injeçao)
+		-> mistura de chaves (evitar colisoes de IVs e chaves fracas)
+		-> controlo de integridade melhorado (MIC)
+		-> contra-medidas
+
+
+	WPA2:
+		--- define uma RSN
+		--- usa mecanismos avançados para proteçao de mensagens
+		--- usa 802.1x para autenticaçao de clientes
+
+			AES-CCMP - AES com CBC-MAC: modo de cifra autenticado usando chaves de 128 bits
+
+		Vulnerabilidades :
+			- Falta de segurança futura
+			- descoberta de senhas
+			- descoberta do pin wps
+			- reinstalaçao de chaves
+			- etc
+
+	FASES:
+
+		- Fase 1 - Descoberta
+		- Fase 2 - Autenticação
+		- Fase 3-4 Way Hanshake
+
+
+	EAP:
+		- inicialmente desenhado para o ppp
+		- ap nao é envolvido
+		- nao concebido para rede sem fios
+
+	Hierarquia de chaves: MSK - PSK - PMK - PTK
+
+> Ataques por dicionario ainda sao possiveis
+> Apenas dados sao protegidos
+> Problemas a nível de meio de acesso (CSMA)
+
+
+
+
+---------------------------------------------------------------------------
+Permissoes linux:
+
+drwx------ ... 2 wester ............. 512 Jan ... 29 23:30 .. Arquivos/
+-rw-rw-r-- ... 1 wester ....... 280232 Dec .. 16 22:41... notas.txt
+
+O primeiro caractere da string indica o tipo de arquivo: se for "d" representa um diretório, se for "-" equivale a um arquivo. Entretanto, outros caracteres podem aparecer para indicar outros tipos de arquivos, conforme mostra a tabela abaixo:
+
+d => diretório
+b => arquivo de bloco
+c => arquivo especial de caractere
+p => canal
+s => socket
+- => arquivo "normal"
+
+Repare agora que no restante da string ainda há 9 caracteres. Os demais são divididos em três grupos de três, cada um representado o proprietário, o grupo e todos os demais, respectivamente. Tomando a linha 2 do exemplo (-rw-rw-r-), desconsiderando o primeiro caractere e dividindo a string restante em 3 partes, ficaria assim:
+
+rw- => a primeira parte significa permissões do proprietário
+rw- => a segunda parte significa permissões do grupo ao qual o usuário pertence
+r-- => a terceira parte significa permissões para os demais usuários
+
+Vamos entender agora o que significa esses caracteres (r, w, x, -). Há, basicamente, três tipos de permissões: leitura, escrita e execução. Leitura permite ao user ler o conteúdo do arquivo mas não alterá-lo. Gravação permite que o user altere o arquivo. Execução, como o nome indica, permite que o user execute o arquivo, no caso de ser executável.
+
+r => significa permissão de leitura (read);
+w => significa permissão de gravação (write);
+x => significa permissão de execução (execution);
+- => significa permissão desabilitada.
+
+A ordem em que as permissões devem aparecer é rwx. Sendo assim, vamos entender a string do nosso exemplo dividindo-a em 4 partes:
+
+Linha 1:
+drwx------ ... 2 wester ............... 512 Jan ... 29 23:30 .. Arquivos/
+
+- é um diretório (d);
+- o proprietário pode alterá-lo, gravá-lo e executá-lo (rwx);
+- o grupo não pode pode alterá-lo, gravá-lo, nem executá-lo (---);
+- os demais usuários não podem alterá-lo, gravá-lo, nem executá-lo (---).
+
+Linha 2:
+-rw-rw-r-- ... 1 wester .......... 280232 Dec .. 16 22:41... notas.txt
+
+- é um arquivo (-);
+- o proprietário pode alterá-lo, gravá-lo, mas não executá-lo. Repare que como este arquivo não é executável, a permissão de execução aparece desabilitada (rw-);
+- o grupo tem permissões idênticas ao proprietário (rw-);
+- o user somente tem permissão de ler o arquivo, não pode alterá-lo (r--).
+
+A tabela abaixo mostra as permissões mais comuns:
+
+--- => nenhuma permissão;
+r-- => permissão de leitura;
+r-x => leitura e execução;
+rw- => leitura e gravação;
+rwx => leitura, gravação e execução.
+

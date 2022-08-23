@@ -1,0 +1,16 @@
+Aspetos positivos:
+- grande variedade de géneros músicais
+- conhecer artistas pequenos
+- valorização do artista e o seu trabalho
+- vendas de albuns, etc
+- proximidade entre o ouvinte e o artista
+- novidades músicais até 6 meses sobre os vários géneros
+- é possivel ver outros users com o mesmo gosto musical através das opiniões
+- 3 diferentes tipos de acesso(ouvinte, artista e label)
+
+Aspetos negativos:
+- sem botão de volume
+- só permite ouvir o album em que se está, e não as várias músicas do artista => restrição
+- páginas variam imenso de cor, torna-se confuso e dá a impressão que estamos em vários sites diferentes mas na mesma aplicação
+- muito confuso de entender a página do album do artista => nao indica novos albuns, apenas assegura alguma informação sobre o album, o artista e outra variedade de artistas do mesmo género
+- artista pode modificar a sua própria página, o que é uma vantagem para ele mas não para o user 

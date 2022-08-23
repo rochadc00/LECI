@@ -1,0 +1,44 @@
+PERGUNTAS SEGURANÇA:
+
+1. Diferença entre uma política de segurança e um mecanismo de desegurança?
+
+R.: Uma política de segurança define as restrições no funcionamento de várias entidades do sistema, em suma define o significado de seguro para o sistema em causa. Um mecanismo de segurança é um procedimento que é necessário à segurança do sistema, sem o qual este seria comprometido. Estes mecanismos são ditados pela política de segurança em vigor. Por exemplo, uma política de autenticação pode definir que os utilizadores utilizam um mecanismo de desafio-resposta para se autenticarem no sistema, e define também os parametros de utilização deste mecanismo (o tipo de chave, o tipo de transformação aplicada no desafio, etc).
+
+
+2. Indique quais das seguintes expressões referem políticas ou mecanismos, e para cada política, descreva uma situação concreta que seja usado um dos mecanismos indicados:
+
+a) política de segurança
+b) mecanismo
+c) pólítica de segurança
+d) política de segurança
+
+
+3. a) Em que consiste o modo de cifra CTR ?
+
+Consiste em poder aceder à decifragem apenas da secção de dados que nos interessa, pelo facto de cada bloco realizar esse procedimento de forma individual.
+
+b) Como é que o modo CTR usa um vetor de inicialização counter que é conhecido e incrementado cada vez que é usado para cifrar o próximo bloco. Assim sendo, blocos com o mesmo conteúdo tÊm valores diferentes mas ao mesmo tempo é possível saber o valor do counter na secção de dados que se quer aceder.
+
+4. Este requesito é extremamente importante pois garante que nenhum atacante consiga encontrar algum texto T2 que seja diferente do texto T1 original?. Caso a colisão ocorresse, o atacante poderia alterar a mensagem de modo a que o seu contẽúdo fosse diferente mas mascarando essa alteração. Quebrando por completo o objetivo de uma assinatura digital ( garantir que todo um dado texto é da autoria da entidade que a assinou).
+
+5. a) A semelhança entre MAC e assinatura digital é que em ambos os casos, podemos validar a autenticidade de uma mensagem, sendo que no MAC sabemos que a mensagem vem da entidade com a qual partilhamos a nossa chave secreta. Na assinatura digital podemos usar a chave pública para verificar se a mensagem foi gerada por essa entidade. 
+As diferenças são que no MAC a chave usada tem que ser secreta e única entre utilizadores na mesma comunidade, sendo que todos os que tiverem a mesma podem gerar mensagens autenticadas. Nas assinaturas digitais, as chaves privadas são unicos e intransmissiveis, podendo qualquer um com acesso à chave pública poder verificar a autenticidade. 
+
+b) Usando apenas uma função CBC podemos usar o valor de K que é partilhado por quem pode gerar o MAC. Para cifrar a mensagem com CBC, deste modo garantimos que a mensagem não pode ser alterada porque foi cifrada em modo CBC e com uma chave que é "privada".
+
+7. a) Um certificado de chave pública de serviço e outro certificado com a chave da entidade certificada.
+
+b) Para que seja possível verificar a autenticidade da mensagem através da sua chave pública
+
+8. a) Os certificados X509 são usados para autenticar a encriptação de website ou webservice. 
+
+b) Entidades certificadores públicas e da transparência maxima. Ou seja, empresas em que o seu trabalho consiste em certificar serviços e por isso dependem da confiaça que todas as pessoas têm dela.
+
+9. a) Uma lista de certificados que estão assinados por entidades certificadoras, sendo que todos os certificados de entidades certificadoras devem ser assinados por um entidade que nós confiamos (com exceção da root "raiz" que como nós confiamos pode estar assinado por ele mesmo). 
+
+b) Consiste num certificado de uma entidade certificadora à qual depositamos toda a confiança, podendo esta estar certificada por ele mesmo. Fazendo com que todos os certificados emitidos por este sejam de confiança.
+
+10. a) Uma lista que contém todos os certificados que dependem única e exclusivamente de um certificado revogado (incluindo ele mesmo).
+
+b) Todos os que pretendem verificar se o certificado está válido.
+

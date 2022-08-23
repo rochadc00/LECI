@@ -1,0 +1,62 @@
+Whats
+1.
+a) True (Syn -> ack = 0)
+b) True (IPs iguais e Ports iguais)
+c) False (Seq e Ack são != 0 e != 40+1(Syn))
+d) False (pode ser mas não é 100% de certeza)
+3.
+a)False (Syn, Ack, logo foi iniciado pelo DST deste packet)
+b)True (Ports diferentes)
+c)False (Seq e Ack a 1, logo ainda nao enviou Data)
+d)False (pode ser mas não é 100% de certeza)
+5.
+a)False (DNS server -> Query response)
+b)True (AAAA -> IPv6)
+c)False (Port do Client)
+d)True (Recebe IPv4 como response à Querie) 
+7.
+a)False (Era um client)
+b)True (porque é)
+c)True (É client e tem o Port certo)
+d)False (A -> IPv4)
+8.
+a) True (GET -> feito pelo client (tal como POST, PUT, ADD, DEL), server so faz HTTP Response)
+b) True
+c) True (200 ok -> response; content type: javascript app)
+d) True (Server: Microsoft-IIS)
+9.
+a) True (404 not found)
+b) True (index.html -> default)
+c) False (nao é o HTML pedido, é um erro)
+d) False (Linux x86_64)
+10.
+a) True
+b) False (Ports iguais)
+c) True (Seq != 1, só 1 deles, porque ACK = 1)
+d) False (host with that IP has that Window size value 
+but the receiver is the other IP that may have another WSV)
+12.
+a) False (Not a DNS server, it's a Client)
+b) True (AAAA -> IPv6)
+c) False (That port is from the client)
+d) True (A -> IPv4)
+13.
+a) True
+b) False
+c) True
+d) False
+15.
+a) True
+b) False
+c) True
+16.
+a) True 
+b) False 
+c) True 
+d) False (SYN = 1, 1º pacote)
+17.
+a) True 
+b) False
+c) True
+d) True
+

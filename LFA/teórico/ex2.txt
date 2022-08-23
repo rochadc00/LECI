@@ -1,0 +1,57 @@
+LFA TP
+
+ex2.
+t - tipo
+Lx - Lista
+c - constante
+s - separador, por norma ','
+i - id(expressão)
+
+(a)
+
+S => D => c t L2 => c t V2 => c t i = e
+S => D => t L1 => t L1 s V1 => t V1 s V2 => t i s i = e
+
+----------------------------------------------------------------------------------------------------------------------
+(b)
+
+Temos 2 tipos de parser:
+	1.descendente => tabela de decisão usa apenas os símbolos não terminais(linhas da minha matriz) e os símbolos terminais que funcionam como colunas.
+	2.ascendente => criar uma linguagem/alfabeto da pilha, ou seja, a tabela vai ser criada à custa desses simbolos e as colunas vao ser indexadas pelos simbolos terminais/nao terminais:
+				tabela:
+		
+			c	t	s	i	=	e	$		D	L1	L2	V1	V2
+		. Z0	s,Z3	s,Z2							Z1
+		. Z1 							ACC	
+		. Z2				s,Z6						Z4		Z5	Z7
+		. Z3		s,Z8						
+		. Z4			s,Z9				r,D->tL1
+		. Z5			r,L1->V1			r,L1->V1		
+
+
+Caso fosse um parser descendente:
+
+		c	t	s	i	=	e	$	(simbolos nao terminais)
+	.D
+	.S
+	.L1
+	.L2
+	.V1
+	.V2
+(simbolos terminais)
+
+----------------------------------------------------------------------------------------------------------------------
+(c)
+
+Z6 = (Z2,i) -> temos de ver em Z2 onde temos um . no lado esquerdo do i
+Z6 = {V1 -> i . , V2 -> i . = e}
+
+Z7 = {V1 -> V2 .}
+
+Z8 = { D -> c t . L2} -> {L2 -> . V2, L2 -> . L2 s V2, V2 -> . i = e} 
+
+Z9 = {L1 -> L1 s . i} 
+
+Z10 = \delta(Z6,"=") = {V2 -> i = . e}
+
+Z11 = \delta(Z10,e) = {V2 -> i = e .} 

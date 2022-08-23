@@ -1,0 +1,21 @@
+Boa tarde a todos. O nosso grupo é constituido por mim, pelo Pedro coutinho e o miguel Ferreira e hoje vamos vos falar na aplicação FilTrack, que é uma app para classificação e partilha de filmes que já visualizamos.
+
+Desde sempre que é muito comum pessoas verem filmes nos seus tempos livres, quer com a familía num sabado à noite, quer no cinema com amigos ou até mesmo sozinhos nas pausas das obrigações diárias.
+
+Algo que certamente todos já sentimos é que, muitas das vezes, gostavamos de ver novamente um filme mas nao nos lembramos do nome porque ou já foi há muitos anos ou as características que nos relembramos sobre o mesmo não sao suficientes para o descobrir.
+
+Desta maneira, surgiu-nos a ideia de criar uma aplicação que permite guardar os filmes que já vimos, classifica-los e além disso, partilhar a nossa opinião e interesses com os nosssos amigos.
+
+Para abordar o processo de desenvolvimento da FilmTracker vamos passar por 6 caminhos: Digo os mesmos que estão nos slides.
+
+Primeiramente, os dois primeiros problemas que surgiram foram: como é que vamos criar uma aplicação na qual vários tipos de pessoas se imaginam a usar e será que o android studio possui os recursos para alcançar-mos o que queremos?
+
+
+Para poder simplificar um pouco desses problemas decidiu-se então criar uma app cuja interface fosse simples e interativa; e que também as pessoas se imaginem a usar como queremos.
+
+A primeira persona em que pensamos foi o James, que tem 65 anos e vê muitos filmes desde que é novo. O james tem o problema de não se conseguir recordar dos filmes que já viu, o que é natural ao longo do tempo. Porr isso, ele necessita de uma persona que salve os filmes que ele vê e que sugere novos filmes que podem ser uma opçao nova para ele ou que lhe pode relembrar dos que já viu.
+
+Neste primeiro scenario o james acorda de manha e quer ver uma pequena lista de filmes que acredita que vai gostar.
+
+Para isso, ela bre a app e vê o menu principal. Se ele quiser escolher um filme na secção de recomendações ele dá scroll até à lista de recomendações produzida pela app. se ele quiser ver lista de amigos, dá scroll para a secção Latest from friends e tenta encontrar um filme com uma boa classificação.
+Assim que ele escolhe o filme, clica no mesmo e quando abre a página do filme precisa de clicar em watchlist. 

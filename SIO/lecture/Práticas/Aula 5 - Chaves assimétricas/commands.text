@@ -1,0 +1,13 @@
+python generateRSAKeys.py 1024 public.key private.key
+
+
+python encryptdecrypt_symetric.py plain.text criptogram.text AES 5 encrypt random.key
+
+
+python cypherRSA.py public.key random.key ciphered.key
+
+
+python decryptRSA.py private.key ciphered.key deciphered.key
+
+
+python encryptdecrypt_symetric.py criptogram.text deciphered.text AES 5 decrypt deciphered.key

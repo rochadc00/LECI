@@ -1,0 +1,105 @@
+
+Segurança multinivel --- Existem vários níveis de segurança, organizados hierarquicamente como entrelaçados. Um role costuma estar sempre associado a um nível de segurança, e um sujeito com esse role só pode atuar nesse nível de segurança. Se o sujeito pretender aceder a outro nível de segurança, esse acesso tem sempre de ser controlado. Os níveis de segurança estão divididos conforme as categorias existentes (autónomo, militar, civil). Os níveis de segurança na categoria civil estão divididos em quatro: publico sensivel, proprietário e restrito. A nível militar e de organizações internacionais estãp tipicamente divididos em cinco: inclassificável, restrito, confidencial, secreto e muito secreto. Podemos ter um objeto que pertença a várias categorias, e desse forma pode ter vários níveis de segurança conforme a categor. Normalmente o nível de segurança de um objeto constroi-se usando uma etiqueta (nível de segurança, categoria).
+
+
+Modelo bell-la padula --- Modelo baseado numa máquina de estados que força o uso de controlo de acesso com base em objetos com etiquetas e sujeitos com determinadas autorizações. Em cada estado são considerados o sujeito, o objeto a aceder, uma matriz de acessos e a informação de acesso atual. Existe um conjunto de políticas de segurança, e esse estado só é considerado seguro caso os modos de acesso permitidos entre o sujeito(roles) e objeto(etiquetas) estejam de acordo com essas políticas. Este modelo define três regras fundamentais, duas MAC e uma DAC cujas propriedades são:
+
+	- Propriedade de segurança simples(no read up, MAC) : Um sujeito S com nivel de segurança L pode ler um objeto O cujo nível de segurança seja inferior ou igual a L, mas não o contrário. 
+
+	- Propriedade estrela(no write down, Confinamento, MAC) : Um sujeito S com um nível de segurança L não deve escrever num objeto O com um nível de segurança inferior a L. 
+
+	- Propriedade de Segurança Discricionária(DAC) : Usa uma matriz de acesso para especificar acessos.
+
+
+Modelo de integridade BIBA --- Complementa o modelo Bell-La Padula, uma vez que fornece a confidencialidade de dados. É assim garantida a integridade de dados. Ao invés de vários niveis de segurança, temos vários níveis de integridade, que visam impedir a modificação de dados por pessoas não autorizadas, impedir a modificação de dados não autorizada por parte de pessoas autorizadas e manter a consistência externa (dados que reflitam o mundo exterior). Apresenta duas regras fundamentais:
+	
+	- Axioma da integridade simples (no read down) : sujeito S com dado nível de integridade I, não deve ler um objeto O com um nível de integridade inferior ao seu.
+
+	- Axioma de integridade estrela (no write up) : sujeito S com dado nível de integridade I não deve escrever um objeto O com um nível de segurança acima do seu.
+
+
+Modelo de integridade CLARK-WILSON --- Modelo que visa o controla da integridade de informação. Para isso, define uma política de integridade constituída por regras de aplicação (E) e regras de certificação (C). Este modelo assenta nas seguintes definições:
+
+	-> Transação : ideia central do modelo, uma transação é um conjunto de operações;
+	-> CDI : considerados os itens chave deste modelo;
+	-> UDI : dados introduzidos por utilizadores;
+	-> IVP : verifica que todas as CDI's do sistema são válidas;
+	-> TP : É uma transação que recebe como entrada uma CDI ou UDI e produz uma CDI segura e com integridade. Apenas a TP pode alterar as CDI's.
+
+
+
+Segurança em base de dados --- Uma BD apresenta inúmeras vantagens óbvias como o acesso partilhado,redundância, consistência e integridade de dados e acesso controlado. É necessário por isso garantir alguns requisitos de segurança como integridade fisica (falhas de energia, reconstrução por falhas), lógica e de elementos, auditabilidade (saber quem mexeu em algo), controlo de acesso, autenticação e disposição (possibilidade de aceder
+à BD e a todos os dados conforme os roles obviamente). Podemos garantir consistência interna e redundância através da deteção de erros (bits de paridade, código de Hamming), ou usando os campos sombra que duplicam campos já existentes (necessita de espaço de armazenamento).
+
+
+
+Informação sensível:
+
+		1. Inerentemente sensível: só por si o valor pode revelar-se sensivel;
+		2. Fonte sensivel: o valor pode revelar a sua origem;
+		3. Declarado sensivel: o valor foi declarado sensivel;
+		4. Registo sensivel: o registo foi declarado sensivel;
+		5. Sensivel em relaçao a outra informaçao: por si só, o valor nem é sensivel, mas comparando a outra informaçao, é sensivel.
+
+A informação sensivel pode originar vários tipos de informações:
+	
+		1. Informação exata: O mais problemático, é fornecido o exato valor da informação sensivel.
+
+		2. Limites: estabelecer limite para outros dados.
+
+		3. Resultados negativos: os valores negativos de um valor sensivel na query pode fornecer informaçao extra sobre alguns valores da query.
+
+		4. Existencia: a existencia de informaçao sensivél pode ser por si só, informaçao sensivel.
+
+		5. Valor provável: sabendo o valor sensivel, é possivel cruzar queries e obter resultados prováveis.
+
+
+Ataques que derivam de informação sensível:
+
+		- Diretos: queries com uma mistura de regras que usem dados sensiveis e dados nao sensiveis, tentando enganar o DBMS com os dados nao sensiveiss que nao estao destinados a usar alguns registos particulares. 
+
+		- Indiretos: inferência de alguns valores com base em valores estatisticos computados por varios registos.
+
+		- Rastreador: a BD pode esconder alguns dados quando alguns registos formam a grande porção de dados revelados. Um rastreador pode enganar o DBMS usando queries diferentes que revelam dados, e combinando os resultados, o atacante pode obter a informação desejada. 
+
+> MAC: Politicas implementadas estáticamente. Cada sujeito e objeto têm atributos/regras de segurança. Sempre que um sujeito tenta aceder a um objeto, o kernel do sistema operativo examina as regras de segurança e decide se o acesso pode ocorrer;
+		-> DAC: Apenas sujeitos com permissões adequadas podem aceder aos objetos (normalmente apenas os donos dos objetos ou administradores do sistema);
+		-> RBAC: Método de control de acesso que atribui roles aos sujeitos de forma dinâmica. Pode implementar tanto o MAC como o DAC. Apresenta as seguintes regras:
+			1. Designação de roles - Para realizar uma operação, um sujeito tem de ter um role.
+			2. Autorização de roles - para realizar uma operação, o controlo de acesso tem de validar o role do sujeito.
+			3. Autorização de operações - Para realizar uma operação, o controlo de acesso tem de validar essa operação para o role em questão, o sujeito tem de passar em todas as restrições que existam. 
+
+		-> Roles vs Grupos: Um role é um conjunto de permissões, permissões essas que são aplicadas aos sujeitos. Um sujeito só pode ter um role de cada vez. Um grupo é um conjunto de sujeitos, e podemos indicar permissões e roles tanto a grupos de sujeitos como apenas a um sujeito. Um sujeito pode pertencer a vários grupos ao mesmo tempo. 
+
+		-> CBAC: Tipo de acesso baseado no historial de acesso de um sujeito (exemplos disso o objeto locking e o filtro de pacotes numa firewall (o tráfego é filtrado, e o acesso é garantido conforme o tráfego feito)).
+
+
+
+Separação de deveres --- Técnica que consiste em termos vários sujeitos a realizar um única tarefa, permitindo evitar fraudes e erros (implementada normalmente como RBAC). Podemos dizer que usa o velho ditado de "quantos mais, melhor", os erros que uma simples pessoa podia obter, são evitados colocando várias pessoas a tratar do mesmo assunto. 
+
+Modelos de fluxo de informação --- A autorização de um determinado sujeito pode ser feita de duas formas:
+	- Por fluxo de informação: fonte e destino da informação, evitando-se informação perigosa.
+	- Com base nos atributos da fonte e destino: Só há fluxos de dados caso a fonte e destino apresentem atributos de determinada segurança.
+
+Com base das regras de aplicação (E) e nas regras de certificação (C), temos as seguintes regras fundamentais:
+
+	Regras Básicas: 
+		. C1 - Sempre que um IVP é executado, ele tem de garantir que todos os CDI's são válidos;
+		. C2 - Para um conjunto de CDI's, uma TP deve transformar essas CDI's de um estado válido para outro estado válido;
+		. E1 - O sistema deve ter uma lista de relações certificadas e garantir que apenas as TP's certificadas para correr um CDI mudam esse CDI;
+
+	Separação de Deveres:
+		. E2 - O sistema deve associar um utilizador com cada TP e um conjunto de CDI's;
+		. C3 - Um tripleto(utilizador, TP, CDI's) deve cumprir os requesitos de separação de deveres;
+
+	Recolha de informação:
+		. E3 - O sistema deve autenticar todos os utilizadores que tentam usar TP's.
+
+	Auditoria:
+		. C4 - Todas as TP's devem registar as suas operações num log para possíveis recuperações;
+
+	Processamento UDI:
+		. C5 - Uma TP que receba uma UDI só pode efetuar transformações sobre valores válidos da UDI. Dessa forma a TP pode negar-se a converter a UDI;
+
+	Restrições de certificação:
+		. E4 - Apenas o certificador da TP pode alterar a lista de entidades associada a essa TP.

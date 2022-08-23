@@ -1,0 +1,153 @@
+CIFRAS CONTÍNUAS:
+
+	- Cada carater de um texto a cifrar vai ser combinado com um carater de uma chave contínua originando um caracter cifrado. Acontece assim a mistura entre a chave e o texto a cifrar. A chave contínua é originada através de um valor alterado por shift registers(LFSR, não sendo assim completamente aleatória). É facilmente invertida através de um XOR. A cadeia de chave contínua é originada a partir de outra chave, que vai ser usada para a decifragem. A cadeira apenas deve ser usada uma vez, senão a soma de duas decifragems usando a mesma key vai resultar na soma de dois textos a cifrar. É também importante que não haja ciclos na cadeia, porque isso pode facilitar o trabalho de criptoanalistas para descobrirem a chave e poderem decifrar textos. Em comparação com as cifras em bloco, as contínuas são bem mais rápidas e menos complexas em termos de hardware. As cifras contínuas podem ser sincronas ( a chave continua muda independentememte do texto a cifrar e do texto cifrado ) e auto-sincronas ( atualizam a chave continua conforme os bits do texto cifrado).
+	
+	
+CIFRA POR BLOCO COM CHAVE ASSIMÉTRICA:
+
+	- ECB : mensagem dividida em blocos, cifrados individualmente.
+
+	- CBC : mensagem dividida em blocos, e a cada bloco é aplicado um XOR com o bloco previamente cifrado, criando uma dependência entre todos os blocos cifrados. O primeiro bloco é cifrado com um VETOR DE INICIALIZAÇÃO aleatório.
+
+
+	- PCBC : semelhante ao CBC, mas o XOR do texto a cifrar é feito com um XOR do texto a cifrar e texto cifrado do ultimo bloco ( exite um xor entre o texto a cifrar e o texto cifrado).
+
+	- CFB : semelhante ao CBC, mas o vetor de inicialização alteatório é cifrado. Faz se uso de um conjunto de shift registers do tamanho do bloco, que vão receber o vetor de inicialização e só depois vai ser enviada a informação para cifragem. Após isto, os x bits mais significativos vão ser combinados por XOR com x bits do texto a cifrar, originando x bits de texto cifrado. Estes bits váo ser colocados no shift register, e o processo repete-se para os próximos x bits do texto a cifrar. 
+
+	- OFB(cifradores contínuos sincronizados) : Para o primeiro bloco é usado um vetor de inicialização aleatório cifrado, e este vetor vai ser continuamente cifrado e utilizado pelos restantes blocos da mesma maneira que o primeiro. De seguido, ocorre um XOR entre o texto a cifrar e o texto cifrado, o que nos indica que a cifragem no bloco pode ser feita com avanço, permitindo que haja a cifragem nos restantes blocos com XORS em paralelo com este. Esta é a GRANDE DIFERENÇA para o CFB.
+
+	- CTR(cifradores contínuos sincronizados) : A próxima chave contínua é gerada através da cifragem sucessiva de valores de um vetor de inicialização contador(que tem os seus bits divididos por cada bloco). Thats why eles têm uma relação entre si.
+
+
+
+									ECB  | CBC | OFB | CFB | CTR
+------------------------------------------------------------------
+	Exposição de padrão			     		x 	  x     x      x
+------------------------------------------------------------------
+	Confusão na entrada			 			x           x     secret
+	da cifragem 				 							  counter
+------------------------------------------------------------------
+	Mesma chave para 			   	x 		x 			x
+	diferentes mensagens		 
+------------------------------------------------------------------
+	Pre-processo				 				  x 		   x
+------------------------------------------------------------------
+	Processo paralelo 			 	x 	 decrypt  w/	decrypt	   x	
+										   only	  pre-		only
+	Acesso paralelo 							  processing
+	aleatório 					 
+------------------------------------------------------------------
+	Erro de propagação			   same    same         some bits
+								   block   next			afterwards
+------------------------------------------------------------------
+	Capacidade de recuperar de 	   block   block          x
+	de perdas					  losses   losses
+------------------------------------------------------------------
+
+
+
+CIFRA POR BLOCO COM CHAVE ASSIMÉTRICA:
+		
+. Usa par de chaves(uma privada e uma pública). Isto permite que haja integridade de dados e náo se comprometa a origem (autenticaçáo da fonte ou assinatura digital). 
+
+A mensagem é cifrada com o uso de uma chave pública do destinatário, e este quando receber desencripta com a sua chave privada. Dessa forma para enviarmos algo confidencial para um host, apenas temos de saber a chave pública dele.
+
+Contudo, isto não permite total confidencialidade pois basta saber a chave pública que se pode desencriptar com uma chave privada pessoal. Por isso, o inteligente seria usar uma chave privada para cifrar a mensagem e uma chave publica para desencriptar. Sem a chave privada para cifrar, não há maneira de decifrar a mensagem também. 
+
+Exemplos:
+		
+		- RSA : Baseia-se na decomposição de um número por pequenos divisores e o cálculo de logaritmos modulares de grandes números. A cifragem ocorre da seguinte maneira:
+
+			1. dois nmrs primos aleatórios, p e q, do mesmo tamanho.
+			2. multiplicas p por q, p*q = n, onde n é usado como tamanho de chaves em bits.
+			3. calcular @(n) = (p-1)(q-1)
+			4. escolher um inteiro i tal que 1 < i < @(n), em que i e @(n) sejam co-primos. i vai ser o expoente da chave pública.
+			5. calcular d tal que i*d = mod(@(n)). d vai ser o expoente da chave privada.
+			6. chave pública: Kpub = (e,módulo(n))
+			7. chave privada: Kpriv = (d, módulo(n))
+			8. cifragem consiste em C = P^i * mod(n)
+			9. decifragem consistem em P = C^d * mod(n)
+			10. d, p, q e @ devem ser secretos
+			11. O valor do expoente i deve ser grande, porque caso P seja pequeno, o resultado de P^i é ligeiramente mais pequeno que o mod(n). Desta forma, usando o i da raiz do texto cifrado, é possível decifrar a mensagem.
+
+
+		Exemplo:
+
+			 p = 5q = 11
+			 - n = p*q = 55
+			 - (p-1)(q-1) = 40
+
+			 i = 3
+			 - coprimo de 40
+
+			 d = 27
+			 - i*d = 1 mod 40
+
+			 P = 26
+			 - C = P^i mod n = 26³ mod 55 = 31
+			 - P = C^d mod n = 31²⁷ mod 55 = 26 
+
+
+		- EIGamal : 
+
+
+CIFRA CONTÍNUA COM CHAVE SIMÉTRICA:
+
+Cifra que origina números aleatórios através do uso de shift registers lineares(LFSR, ex:XOR)(os valores de saída dos shift registers são considerados numa função booleana, aumetando assim a segurança. Os LFSR usam relógios irregulares, controlados pela saída de outro LFSR). Exemplo: se o valor é 0, o LFSR1 recebe o relógio, se o valor é 1, LFSR2 recebe o relógio. A saída pode ser um OR entre os ultimos bits do LFSR de escolha e do escolhido. O estado incial de todos os LFSR é a chave. Uma boa função de realimentação permite criar sequências praticamente aleatórias e com periodos grandes).
+LFSR origina 2^n-1 sequências não nulas. Se uma das sequências tiver um período de 2^n-1, então todas têm. Principais algoritmos: A5, RC4, SEAL.
+
+
+-------------------------------------------------------------------------------
+
+Funções de síntese: Propriedades fundamentais
+
+	1) dado uma hash, é impossível encontrar a sua mensagem original
+	2) dada uma mensagem e a sua hash, é impossível encontrar outra mensagem com a mesma hash
+	3) é impossível encontrar duas mensagens com a mesma hash
+
+	Principais algoritmos: MD5 de 128 bits(não é seguro, fácil de detetar colisões) e SHA-1 de 160 bits, ainda sem colisões detetadas.
+
+
+MAC: 
+	
+	- Garantem autenticidade/integridade
+	- só os conhecedores da chave conseguem gerar/validar o MAC
+
+	Funcionamento:
+
+	- Temos um sender que possui a mensagem, através de uma chave e através do algotimo de MAC, é possível original um MAC(message authentication code). Desta forma, envia-se a mensagem juntamente do MAC. Se o mesmo MAC é encontrado no receiver, a mensagem é autenticada e a integridade mantem-se.
+	Quando uma pessoa verifica o MAC pode também escolher gerar outros MACs para outras mensagens. Dessa forma não se cria rejeição.
+
+	3 formas de autenticação:
+		1. Encrypt then MAC: permite verificar a integridade antes da decifra (BOA APROXIMAÇÃO).
+		2. Encrypt and MAC: MAC não é cifrado; fornece informação do texto.
+		3. MAC then Encrypt: MAC é cifrado; obriga a decifra completa antes da validação do MAC(MÁS APROXIMAÇÕES).
+
+
+
+Assinaturas digitais:
+
+	- Objetivo: Autenticar o conteúdo de um documento.
+
+	Funcionamento:
+
+	- A mensagem a enviar vai passar por um hash gerando um numero. Esse numero vai ser cifrado com a chave privada do emissor gerando uma mensagem a enviar. Na fase de verificação no recetor, este vai extrair a assinatura e decifra-la com a chave pública do certificado do emissor. Vai passar a mensagem pelo hash gerando um numero que vai confirmar com o numero gerado pela decifragem se é valida a assinatura.
+
+
+
+Gestão de chaves assimétricas: OBJETIVOS
+
+	* Geraçáo de chaves assimétricas(Quando e como devem ser geradas): 1) boa geração aleatória; 2) chaves eficientes que não compromentam a segurança(chaves de poucos bits); 3) auto-geração de chaves privadas.
+
+	* Exploração de chaves privadas(Como mantê-las privadas): 1) uma chave privada deve sempre representar um sujeito; 2) uso de PASSWORD ou PIN para garantir a sua segurança; 3) manter num ambiente já por si seguro (ex, token cifrado onde o próprio user pode criar e trabalhar individualmente).
+
+	* Distribuição de chaves públicas(Como distribui-las corretamente): 1) para enviar informação devem se distribuir chaves manualmente, ou usando uma forma secreta partilhada ou uma rede ad-hoc com certificados digitais; 2) para enviar assinaturas digitais devem se distribuir por redes ad-hoc.
+
+	* Tempo de vida de uma chave(Até quando podem ser usadas): 1) devem ter um tempo limite de vida para que as chaves privadas não sejam descobertas ou para não se perderem; 2) os certificados podem ser livremente copiados e distribuídos, sendo que isso não compromete o próprio user destes. 3) encontra-se solução ao atribuir um período de validade a cada certificado.
+
+
+Certificados digitais de chaves públicas: documentos públicos seguros e que ligam uma entidade a uma chave pública. Exemplo: X usa a chave Y. Se este certificado está assinado por uma chave pública de uma CA(Autoridade de Certificação), se essa chave pública for confiável, e a assinatura por parte do certificado estiver correta, então é confiável dizer que a chave Y pertence à entidade X(usam PCKS, public key crypto standard).
+
+
+
+

@@ -1,0 +1,17 @@
+2. a) A vulnerabilidade consiste na exploração da alteração da query feita à base de dados. Normalmente consiste em "injetar código" SQL em inputs de utilizador de forma a que se consida aceder/alterar informação prejudicando o normal funcionamento do serviço.
+
+b) Sentetizando a input que vem do utilizador.
+
+3. Não deve ser usado com a mesma VI e chave porque deste modo era possível observar padrões entre criptogramas, de modo, a que se consiga decifrar partes das mensagens. 
+
+4. a) Começando com um contador secreto (CTR0) usamos o mesmo para cifrar um bloco de dados. Os próximos n blocos vão usar um contador dependente de CRT0, sendo CTRn = CTR0 + n. Deste modo, podemos calcular o valor de CTR para qualquer bloco da mensagem se soubermos a posição desse bloco e o valor de CTR inicial. 
+
+b) Para decifrar B bytes de uma mensagem M, que dista b bytes da origem, o primeiro CTRb0 = CTR0 + b*8/n, sendo que para cada bit do bloco B teremos que adicionar 1 ao CTRb0 para decifrar cada bit dos dados. 
+
+5. Numa função de síntese o resultado é de dimensão constante independentemente do tamanho da entrada, dado um texto é dificil encontrar um segundo texto com a mesma síntese e é resistente a colisões. 
+
+8. É necessário que uma entidade pública e de confiança (entidade certificadora), verifique se certa chave pública está associada a uma entidade/serviço de modo a que se alguém se tentar fazer passar por essa entidade/serviço, não consiga passar pelo mesmo, dando uma chave pública válida mas que é de outro serviço. Deste modo, verificamos se a chave é valida mas também verificamos a autenticidade. 
+
+10. Uma CRL é uma lista de certificados revogados (normalmente gerido pela CA), um delta CRL refere-se a uma lista de diferenças nos certificados revogados em comparação à última base CRL.
+
+b) A CRL é a lista de todos os certificados revogados enquanto que o OCSP é o protocolo que vai verificar o certificado. Neste caso o OCSP precisa de aceder à CRL para poder validar ou não validar o certificado em questão.

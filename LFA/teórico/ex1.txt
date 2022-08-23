@@ -1,0 +1,430 @@
+LFA TP
+
+ex 1.
+
+(a)
+
+abcd \in L3 and abcd \in L4
+
+abcd \in L3:
+
+O que fazer? -Mostrar que há um caminho neste AFG que, começando no estado inicial e executando
+o caminho abcd, termina num estado de aceitação.
+
+Estado inicial = INI = 1
+
+1 -> a -> 1 -> b -> 2 -> c -> 1 -> d -> 3	( -> representam transição por ocorrência)
+
+(começa no estado inicial e termina no 3)  
+
+
+abcd \in L4:
+
+Neste caso(por ser gerada por uma gramática) podemos fazer por 2 opções:
+
+	1. derivação (gramática deriva uma determinada palavra)
+
+EX:
+
+S => X => X O => O => a X d => a X O d => a O d => a R d => a RbRc d => a bRc d => abcd
+
+Quando temos \e, a variável pode ser substituída por essa valor que é ignorado numa forma de simplificar.
+( => representam passo de derivação )
+
+Logo, S chega a abcd
+
+Podemos concluir então que abcd pertence a L3 interseção com L4
+
+----------------------------------------------------------------------------------------------------------------------
+(b)
+
+(L1 contido em L4)
+todas as palavras de L1 também pertencem a L4
+\and
+há pelo menos 1 palavra de L4 que não pertence a L1
+
+Neste caso, L1 é um conjunto infinito pois tem uma variedade enorme de opçóes.
+
+L1 não é uma linguagem regular, logo não pode ser representada.
+
+S => X
+
+X => X O => O => a X d
+X => X O => O => R
+
+X =>* a^n X d^n =>* a^n R d^n , n >= 0
+
+R => RbRc => R (bc)
+
+R =>* R (bc)^k => (bc)^k  , k >= 0
+
+Logo, S =>* a^n (bc)^k d^n  , n >= 0 e k >= 0
+
+k > 0 é um subconjunto de k >= 0
+
+Logo, já temos um valor que pertence a L4 e não L1, k = 0
+
+----------------------------------------------------------------------------------------------------------------------
+(c)
+
+Grámatica regular:
+
+	S => XYZ NÃO É solução pois NÃO É gramática regular
+
+Ou seja, uma gramática regular não pode ter 3 símbolos não terminados numa redução.
+
+			a* (b|c)* (cd)*
+
+
+Substituir:   (b|c)*(cd)* por X
+
+S -> a S | X 
+
+Substituir:   (cd)* em Y
+
+Y -> bX | cX | Y
+Y -> cd Y | \e(símbolo terminal)
+
+----------------------------------------------------------------------------------------------------------------------
+(d)
+
+Temos 2 opções:
+
+	1. Transformar a expressão regular(ER) numa AFG, fazer interseção de AFG's e depois
+calcular a ER equivalente.
+	
+	2. Calcular a ER para L3, AFG.
+
+Pela segunda opção, uma vez que L2 já é uma ER, queremos obter:
+
+	L = L3 x L2  (x representa concatenação)
+
+Vamos converter o AFG, L3, numa ER:
+
+INI: 1
+
+1 -> a -> 1
+1 -> b -> 2
+1 -> d -> 3
+
+2 -> c -> 1
+2 -> a -> 2
+
+3 -> \e -> 2
+
+ACC: {3} Estado de aceitação
+
+OBSERVAÇÃO: Quando passamos uma AFG para uma ER, não podemos ter o estado inicial a receber de outros estados um valor.
+Logo, não podemos ter no lado direito do 1 o mesmo valor.
+Para além disso, só podemos ter um estado de aceitação e esse tem de ser de término. Logo, não podemos ter no lado esquerdo
+o valor 3. Ou seja, valor de saída do estado de aceitação.
+Por último, eliminar estados intermédios.
+Assim sendo,
+
+	1 -> a -> 1
+	2 -> c -> 1 	
+	3 -> \e -> 2	(têm de sofrer mudanças associadas)
+
+--------------------					(ver guião de conversão AFG numa ER)
+1º transformação: Acrescentar um estado novo
+
+INI: \a
+
+\a -> \e -> 1
+1 -> a -> 1
+1 -> b -> 2
+1 -> d -> 3
+
+2 -> c -> 1
+2 -> a -> 2
+
+3 -> \e -> 2
+
+ACC: {3}
+--------------------
+2º transformação: Acrescentar um novo estado de aceitação
+
+INI: \a
+
+\a -> \e -> 1
+1 -> a -> 1
+1 -> b -> 2
+1 -> d -> 3
+
+2 -> c -> 1
+2 -> a -> 2
+
+3 -> \e -> 2
+3 -> \e -> \b
+
+ACC: {\b}
+--------------------
+3º transformação: Eliminar estados intermédios (1,2 e 3)
+
+INI: \a
+
+\a -> \e -> 1
+1 -> a -> 1
+1 -> b -> 2
+1 -> d -> 3
+
+2 -> c -> 1
+2 -> a -> 2
+
+3 -> \e -> 2
+3 -> \e -> \b
+
+ACC: {\b} 
+
+ESTADO INTERMÉDIO 1:
+
+Quantos arcos/transições chegam ao estado 1 vindo de estados que não o 1?
+
+\a -> \e -> 1
+2 -> c -> 1	(2 transições)
+
+Quantos arcos/transições saem do estado 1 e se dirigem a outros arcos que não o 1?
+
+1 -> b -> 2
+1 -> d -> 3	(2 transições)
+
+- Eliminando o estado 1, temos de acrescentar 4 transições (2*2)
+
+
+ESTADO INTERMÉDIO 2:
+
+Quantos arcos/transições chegam ao estado 2 vindo de estados que não o 2?
+
+1 -> b -> 2
+3 -> \e -> 2	(2 transições)
+
+Quantos arcos/transições saem do estado 2 e se dirigem a outros arcos que não o 2?
+
+2 -> c -> 1	(1 transições)
+
+- Eliminando o estado 2, temos de acrescentar 2 transições (2*1)
+
+
+ESTADO INTERMÉDIO 3:
+
+Quantos arcos/transições chegam ao estado 3 vindo de estados que não o 3?
+
+1 -> d -> 3	(1 transições)
+
+Quantos arcos/transições saem do estado 3 e se dirigem a outros arcos que não o 3?
+
+3 -> \e -> 2
+3 -> \e -> \b	(2 transições)
+
+- Eliminando o estado 3, temos de acrescentar 2 transições (1*2)
+
+Conclusão: Eliminar o estado 2 ou 3 é mais favorável do que eliminar o estado 1.
+
+ELIMINAR O 2:
+
+INI: \a
+
+
+1 -> b -> 2 (vai do 1 para o 2)
+3 -> \e -> 2
+2 -> a -> 2 (anda no 2 às voltinhas)
+2 -> c -> 1 (vai para o 1)
+
+
+\a -> \e -> 1
+1 -> a -> 1	=> 1 -> (a | x1) -> 1  (paralelo)
+1 -> d -> 3
+3 -> \e -> \b
+
+criar novas transições:
+1 -> x1 -> 1 (esta transição já existe em cima)
+3 -> x2 -> 1
+
+x1 = b(a)*c  (vou do 1 para o 2 com b, ando às voltinhas com o 2 no a e, por fim, vou do 2 para o 1 com c)
+x2 = \e(a)*c = (a)*c (vou do 3 para o 2 com \e, ando às voltinhas com o 2 no a e, por fim, vou do 2 para o 1 com c)
+
+Fica assim:
+
+\a -> \e -> 1
+1 -> (a | x1) -> 1  (paralelo)
+1 -> d -> 3
+3 -> \e -> \b
+3 -> x2 -> 1
+
+
+x1 = b(a)*c  
+x2 = \e(a)*
+
+
+ACC: {\b} 
+
+Agora, sobram-nos apenas dois estados intermédios (1 e 3) e o número de transições em ambos é igual  a 2. Logo,
+escolhemos agora um destes para eliminar.
+
+
+ELIMINAR O 1:
+
+INI: \a
+
+\a -> \e -> 1		|
+3 -> x2 -> 1		|  Modificar estas 3
+1 -> (a | x1) -> 1	|	
+1 -> d -> 3		|
+
+criar novas transições:
+\a -> x3 -> 3
+3 -> x4 -> 3
+
+x3 = \e(a|x1)*d
+x4 = x2(a|x1)*d
+
+3 -> \e -> \b
+x1 = b(a)*c  
+x2 = \e(a)*
+
+
+Fica assim:
+
+x3 = \e(a|x1)*d = (a|x1)*d
+x4 = x2(a|x1)*d
+
+\a -> x3 -> 3
+3 -> x4 -> 3
+3 -> \e -> \b
+
+x1 = b(a)*c  
+x2 = \e(a)*
+
+ACC: {\b} 
+
+
+ELIMINAR O 3:
+
+e3 = x3(x4)*\e (terminar transição)
+
+
+----------------------------------------------------------------------------------------------------------------------
+(e)
+
+Recuperar AFG:
+
+INI: 1
+
+1 -> a -> 1
+1 -> b -> 2
+1 -> d -> 3
+
+2 -> c -> 1
+2 -> a -> 2
+
+3 -> \e -> 2
+
+ACC: {3}
+
+---
+
+\eclosure(1) = {1}
+\eclosure(2) = {2}
+\eclosure(3) = {2,3}
+
+INI: {1} -> subconjunto que tem o estado 1
+
+Calcular a transição de 
+{1} -> a -> ? = {1}
+{1} -> b -> ? = {2}
+{1} -> c -> ? = {} (conjunto vazio também é um estado)
+{1} -> d -> ? = {2,3}
+
+INI: {2} -> subconjunto que tem o estado 2
+
+Calcular a transição de 
+{2} -> a -> {2}
+{2} -> b -> {}
+{2} -> c -> {1}
+{2} -> d -> {}
+
+transição do estado vazio:
+{} -> a -> {}
+{} -> b -> {}
+{} -> c -> {}
+{} -> d -> {}
+
+INI: {2,3} -> subconjunto que tem o estado 3
+
+Calcular a transição de 
+
+{2,3} -> a -> {2} \cup {} = {2}
+{2,3} -> b -> {} \cup {} = {}
+{2,3} -> c -> {1} \cup {} = {1}
+{2,3} -> d -> {} \cup {} = {}
+
+ACC: { {1}, {2}, {}} (3 estados)
+
+
+----------------------------------------------------------------------------------------------------------------------
+(f)
+
+Podemos perceber que sempre que existe um a, também existe um d. Logo, a nossa gramática deve, sempre que insere um a, inserir um d.
+Desta maneira, podemos sempre substituir a^n por a^n+1 e d^n por d^n+1. Sendo assim:
+
+S = a^n (bc)^k d^n
+a a^n (bc)^k d^n d = a S d 
+X = (bc)^k
+(bc)^(k+1) = (bc)^k (bc)  (k>0, logo inicia no valor 1)
+
+S -> a S d | X
+X -> bc X | bc
+
+----------------------------------------------------------------------------------------------------------------------
+(g)
+
+X -> X O  => follow(O) contém follow(X) 
+S -> X    => follow(X) contém follow(S)
+porque S é o símbolo inicial => $ \in follow(S)
+
+follow(O) contém follow(X) contém follow(S) contém $
+
+S => X => XO => XOO => XOR => XaXdR
+
+X -> XO => follow(X) contém(first(O) - {\e} U follow(X))
+
+first(O) = first(R) U first(aXd) = {\e,b,a}
+first(R) = first(\e) U first(RbRc) = {\e,b}
+
+----------------------------------------------------------------------------------------------------------------------
+(h)
+
+Há recursivida à esquerda quando o valor da esquerda tem, numa das suas hipoteses, essa mesma variável à direita. Por exemplo:
+X -> \e | X O (X tem X à direita)
+R -> \e | RbRc (R tem R à direita)
+ 
+Se tivesse mos também uma relação:
+O -> R | a X d
+R -> e | O
+
+O transforma se em R e R transforma se em O => logo, de forma indireta resulta numa recursividade
+
+Neste caso em particular, apenas duas vezes é que temos recursividade à esquerda de forma direta.
+
+X -> \e | X O
+
+X => XO => XOO => XOOO => ...  => XO^n => \e O^n
+
+X -> \e Y
+Y -> \e | O Y
+
+Outro exemplo extra:
+X -> X \a | b
+X => X \a => X\a\a => ... => \b \a^n
+X -> \e Y
+Y -> \e | \a Y
+
+(SUBSTITUI O QUE CAUSA RECURSIVIDADE À ESQUERDA)
+R => R(bRc) => R(bRc)(bRc) => ... => R(brc)^n
+R => \e Y
+Y => \e | (bRc) Y 
+
+A -> b | A a
+A => Aa => Aaa => ... => Aa^n => b a^n
+A -> \e Z
+Z -> \e | a Z 
